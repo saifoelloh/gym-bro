@@ -82,10 +82,10 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-2 mt-2 sm:mt-0 flex-shrink-0 min-w-0 sm:w-28">
+                <div className="flex flex-col gap-3 mt-4 sm:mt-0 flex-shrink-0 sm:w-32">
                     <Link
                         href={`/log?template=${t.id}`}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 text-xs py-3 sm:py-2.5 rounded-xl font-bold transition-colors shadow-lg shadow-blue-500/10"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 text-xs py-3.5 sm:py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/10 active:scale-95"
                     >
                         <Play size={14} className="fill-current" />
                         START
@@ -94,27 +94,27 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                     <div className="grid grid-cols-3 sm:flex sm:flex-col gap-2">
                         <button
                             onClick={() => onEdit(t)}
-                            className="flex items-center justify-center p-2.5 sm:py-2 sm:px-3 text-[10px] font-bold text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800"
+                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-[10px] font-bold text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800 gap-1.5"
                             title="Edit"
                         >
-                            <Pencil size={12} className="sm:mr-1.5" />
-                            <span className="hidden sm:inline">EDIT</span>
+                            <Pencil size={12} />
+                            <span>EDIT</span>
                         </button>
                         <button
                             onClick={() => onDuplicate(t.id)}
-                            className="flex items-center justify-center p-2.5 sm:py-2 sm:px-3 text-[10px] font-bold text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800"
+                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-[10px] font-bold text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800 gap-1.5"
                             title="Copy"
                         >
-                            <Copy size={12} className="sm:mr-1.5" />
-                            <span className="hidden sm:inline">COPY</span>
+                            <Copy size={12} />
+                            <span>COPY</span>
                         </button>
                         <button
                             onClick={() => onDelete(t.id)}
-                            className="flex items-center justify-center p-2.5 sm:py-2 sm:px-3 text-[10px] font-bold text-red-400 hover:text-red-300 bg-red-900/10 hover:bg-red-900/20 rounded-lg transition-colors border border-red-900/20"
+                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-[10px] font-bold text-red-400/80 hover:text-red-400 bg-red-500/5 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20 gap-1.5"
                             title="Delete"
                         >
-                            <Trash2 size={12} className="sm:mr-1.5" />
-                            <span className="hidden sm:inline">DELETE</span>
+                            <Trash2 size={12} />
+                            <span>DELETE</span>
                         </button>
                     </div>
                 </div>
