@@ -23,9 +23,9 @@ function newSet(setNumber: number): ActiveSet {
 
 export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: Props) {
   const [collapsed, setCollapsed] = useState(false);
-  const { exercise, sets, notes } = exerciseEntry;
-  const type = exercise.exercise_type;
-  const color = MUSCLE_COLORS[exercise.muscle_group as MuscleGroup];
+  const { sets, notes, muscle_group, exercise_type, name } = exerciseEntry;
+  const type = exercise_type;
+  const color = MUSCLE_COLORS[muscle_group as MuscleGroup];
 
   const updateSet = (i: number, field: keyof ActiveSet, value: string | number) => {
     const newSets = [...sets];
@@ -69,9 +69,9 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
             {index + 1}
           </span>
           <div>
-            <p className="font-display tracking-widest text-sm uppercase">{exercise.name}</p>
+            <p className="font-display tracking-widest text-sm uppercase">{name}</p>
             <p className="font-mono text-[10px] text-muted uppercase">
-              {exercise.muscle_group} · {exercise.sub_category}
+              {muscle_group}
             </p>
           </div>
         </div>

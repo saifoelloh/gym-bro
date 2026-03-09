@@ -126,3 +126,20 @@ export interface CreateTemplatePayload {
   description?: string
   exercises: TemplateExercisePayload[]
 }
+export interface ActiveSet {
+  set_number: number
+  reps: string
+  weight_kg: string
+  duration_seconds: string
+  rest_seconds: number
+  notes: string
+}
+
+export interface ActiveExercise {
+  id: string
+  name: string
+  muscle_group: MuscleGroup
+  exercise_type: ExerciseType
+  sets: ActiveSet[]
+  notes: string
+}
