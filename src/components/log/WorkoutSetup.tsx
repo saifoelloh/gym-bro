@@ -30,8 +30,8 @@ export function WorkoutSetup({ name, setName, date, setDate, logged, setLogged, 
                         placeholder="e.g. Heavy Push Day"
                     />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
+                <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
+                    <div className="flex-1">
                         <FormLabel>Date</FormLabel>
                         <Input
                             type="date"
@@ -42,7 +42,7 @@ export function WorkoutSetup({ name, setName, date, setDate, logged, setLogged, 
                     <div className="flex items-end">
                         <Button
                             variant="secondary"
-                            className="w-full h-11 rounded-xl text-[11px] font-bold tracking-widest uppercase italic"
+                            className="w-full h-12 md:h-11 rounded-xl text-[11px] font-bold tracking-widest uppercase italic"
                             onClick={onAddExercise}
                         >
                             <Plus size={14} className="mr-1" />

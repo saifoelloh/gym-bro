@@ -18,9 +18,9 @@ export function WorkoutStep({ loggedExercise, index, onSetsChange, onAddExercise
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-            <div className="flex items-start justify-between px-1">
-                <div>
-                    <h2 className="text-xl font-bold text-text uppercase tracking-tight italic">{exercise.name}</h2>
+            <div className="flex items-start justify-between px-1 gap-4">
+                <div className="min-w-0">
+                    <h2 className="text-xl md:text-2xl font-bold text-text uppercase tracking-tight italic break-words">{exercise.name}</h2>
                     <div className="flex items-center gap-2 mt-1">
                         <Badge variant={exercise.muscle_group} className="text-[10px] px-2 py-0.5">
                             {exercise.muscle_group.toUpperCase()}
@@ -30,8 +30,8 @@ export function WorkoutStep({ loggedExercise, index, onSetsChange, onAddExercise
                         </span>
                     </div>
                 </div>
-                <div className="flex items-center justify-center shrink-0 h-10">
-                    <h2 className="text-5xl font-bold text-text uppercase">#{index + 1}</h2>
+                <div className="flex items-center justify-center shrink-0 pt-1">
+                    <h2 className="text-3xl md:text-5xl font-bold text-text uppercase opacity-20">#{index + 1}</h2>
                 </div>
             </div>
 
