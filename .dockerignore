@@ -1,0 +1,27 @@
+# .git
+.git
+.gitignore
+
+# node_modules
+node_modules
+npm-debug.log
+
+# next.js
+.next
+out
+build
+
+# env
+.env
+.env.local
+.env.production
+
+# docker
+Dockerfile
+.dockerignore
+
+# misc
+README.md
+.agents
+.agent
+brain
