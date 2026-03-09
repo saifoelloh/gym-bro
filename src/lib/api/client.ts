@@ -1,4 +1,4 @@
-import type { Workout, Exercise, ProgressPoint, CreateWorkoutPayload } from '@/types'
+import type { Workout, Exercise, ProgressPoint, CreateWorkoutPayload, WorkoutTemplate, CreateTemplatePayload } from '@/types'
 
 const BASE = '/api'
 
@@ -17,11 +17,23 @@ async function fetcher<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   workouts: {
     list: (limit = 20) => fetcher<Workout[]>(`/workouts?limit=${limit}`),
-    get:  (id: string) => fetcher<Workout>(`/workouts/${id}`),
+    get: (id: string) => fetcher<Workout>(`/workouts/${id}`),
     create: (body: CreateWorkoutPayload) =>
       fetcher<Workout>('/workouts', { method: 'POST', body: JSON.stringify(body) }),
     remove: (id: string) =>
       fetcher<void>(`/workouts/${id}`, { method: 'DELETE' }),
+  },
+  templates: {
+    list: () => fetcher<WorkoutTemplate[]>('/templates'),
+    get: (id: string) => fetcher<WorkoutTemplate>(`/templates/${id}`),
+    create: (body: CreateTemplatePayload) =>
+      fetcher<WorkoutTemplate>('/templates', { method: 'POST', body: JSON.stringify(body) }),
+    update: (id: string, body: Partial<CreateTemplatePayload>) =>
+      fetcher<WorkoutTemplate>(`/templates/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    remove: (id: string) =>
+      fetcher<void>(`/templates/${id}`, { method: 'DELETE' }),
+    duplicate: (id: string) =>
+      fetcher<WorkoutTemplate>(`/templates/${id}/duplicate`, { method: 'POST' }),
   },
   exercises: {
     list: () => fetcher<Exercise[]>('/exercises'),

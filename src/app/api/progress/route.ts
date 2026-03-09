@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/server'
+import { supabase } from '@/lib/supabase'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -20,7 +20,6 @@ export async function GET(req: NextRequest) {
       )
     `)
     .gte('workout_exercises.workouts.date', since.toISOString().split('T')[0])
-    .order('workout_exercises.workouts.date')
 
   if (exerciseId) query = query.eq('workout_exercises.exercise_id', exerciseId)
 
@@ -36,12 +35,15 @@ export async function GET(req: NextRequest) {
       exercise_name: we.exercises.name,
       max_weight_kg: 0, total_volume: 0, max_reps: 0, total_duration: 0,
     }
-    if (row.weight_kg)               existing.max_weight_kg = Math.max(existing.max_weight_kg ?? 0, row.weight_kg)
-    if (row.weight_kg && row.reps)   existing.total_volume  = (existing.total_volume ?? 0) + row.weight_kg * row.reps
-    if (row.reps)                    existing.max_reps      = Math.max(existing.max_reps ?? 0, row.reps)
-    if (row.duration_seconds)        existing.total_duration = (existing.total_duration ?? 0) + row.duration_seconds
+    if (row.weight_kg) existing.max_weight_kg = Math.max(existing.max_weight_kg ?? 0, row.weight_kg)
+    if (row.weight_kg && row.reps) existing.total_volume = (existing.total_volume ?? 0) + row.weight_kg * row.reps
+    if (row.reps) existing.max_reps = Math.max(existing.max_reps ?? 0, row.reps)
+    if (row.duration_seconds) existing.total_duration = (existing.total_duration ?? 0) + row.duration_seconds
     map.set(key, existing)
   }
 
-  return NextResponse.json(Array.from(map.values()))
+  const result = Array.from(map.values())
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  return NextResponse.json(result)
 }

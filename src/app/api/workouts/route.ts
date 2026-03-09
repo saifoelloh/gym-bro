@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/server'
+import { supabase } from '@/lib/supabase'
 import type { CreateWorkoutPayload } from '@/types'
 
 const WORKOUT_SELECT = `

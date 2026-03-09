@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/server'
+import { supabase } from '@/lib/supabase'
 
 const WORKOUT_SELECT = `
   id, name, date, duration_minutes, notes, rpe, created_at,

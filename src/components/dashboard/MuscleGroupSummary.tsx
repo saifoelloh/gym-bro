@@ -1,8 +1,8 @@
 import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
-import type { Workout } from '@/types'
+import type { Workout, MuscleGroup } from '@/types'
 
-const ALL_GROUPS = ['Chest','Back','Shoulders','Arms','Core','Legs','Cardio']
+const ALL_GROUPS: MuscleGroup[] = ['Chest', 'Back', 'Shoulders', 'Arms', 'Core', 'Legs', 'Cardio']
 
 export function MuscleGroupSummary({ workouts }: { workouts: Workout[] }) {
   const hit = new Set(

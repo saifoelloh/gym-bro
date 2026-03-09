@@ -6,6 +6,7 @@ export type ExerciseType =
   | 'assisted'
 
 export type MuscleGroup = 'Chest' | 'Back' | 'Shoulders' | 'Arms' | 'Core' | 'Legs' | 'Cardio'
+export const MUSCLE_GROUPS: MuscleGroup[] = ['Chest', 'Back', 'Shoulders', 'Arms', 'Core', 'Legs', 'Cardio']
 
 export interface Exercise {
   id: string
@@ -81,4 +82,47 @@ export interface CreateWorkoutPayload {
   rpe?: number
   duration_minutes?: number
   exercises: ExercisePayload[]
+}
+export interface WorkoutTemplate {
+  id: string
+  name: string
+  description?: string
+  created_at: string
+  updated_at: string
+  template_exercises?: TemplateExercise[]
+}
+
+export interface TemplateExercise {
+  id: string
+  template_id: string
+  exercise_id: string
+  exercise_order: number
+  target_sets: number
+  notes?: string
+  created_at: string
+  exercise?: Exercise
+}
+
+export const MUSCLE_COLORS: Record<MuscleGroup, string> = {
+  Chest: '#EF4444',
+  Back: '#3B82F6',
+  Shoulders: '#EAB308',
+  Arms: '#A855F7',
+  Core: '#F97316',
+  Legs: '#22C55E',
+  Cardio: '#EC4899',
+}
+
+export const REST_PRESETS = [30, 45, 60, 90, 120, 150, 180, 240, 300]
+export interface TemplateExercisePayload {
+  exercise_id: string
+  exercise_order: number
+  target_sets: number
+  notes?: string
+}
+
+export interface CreateTemplatePayload {
+  name: string
+  description?: string
+  exercises: TemplateExercisePayload[]
 }

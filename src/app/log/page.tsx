@@ -1,20 +1,37 @@
 'use client'
-import { useRouter }     from 'next/navigation'
-import { useExercises }  from '@/hooks/useExercises'
-import { useWorkouts }   from '@/hooks/useWorkouts'
-import { WorkoutForm }   from '@/components/log/WorkoutForm'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useExercises } from '@/hooks/useExercises'
+import { useWorkouts } from '@/hooks/useWorkouts'
+import { WorkoutForm } from '@/components/log/WorkoutForm'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { Suspense } from 'react'
 
-export default function LogPage() {
+function LogContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const templateId = searchParams.get('template')
   const { exercises, loading, error } = useExercises()
   const { create } = useWorkouts()
+
   if (loading) return <LoadingSpinner label="Loading exercises..." />
-  if (error)   return <p className="text-red-500 p-4">{error}</p>
+  if (error) return <p className="text-red-500 p-4">{error}</p>
+
   return (
     <main className="max-w-2xl mx-auto p-4 space-y-4">
       <h1 className="text-2xl font-bold text-white">Log Workout</h1>
-      <WorkoutForm exercises={exercises} onSubmit={async p => { await create(p); router.push('/') }} />
+      <WorkoutForm
+        exercises={exercises}
+        templateId={templateId}
+        onSubmit={async p => { await create(p); router.push('/') }}
+      />
     </main>
+  )
+}
+
+export default function LogPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner label="Loading..." />}>
+      <LogContent />
+    </Suspense>
   )
 }

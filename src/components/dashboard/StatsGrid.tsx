@@ -15,8 +15,8 @@ export function StatsGrid({ workouts }: { workouts: Workout[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {[
-        { label: 'Total Workouts',    value: workouts.length },
-        { label: 'This Week',         value: thisWeek },
+        { label: 'Total Workouts', value: workouts.length },
+        { label: 'This Week', value: thisWeek },
         { label: 'Total Volume (kg)', value: totalVolume.toLocaleString() },
         { label: 'Muscle Groups Hit', value: muscleGroups },
       ].map(({ label, value }) => (
