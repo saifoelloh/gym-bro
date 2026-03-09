@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { ExerciseSelector } from './ExerciseSelector'
-import { SetLogger } from './SetLogger'
 import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Stepper } from '@/components/ui/Stepper'
 import { api } from '@/lib/api/client'
+import { WorkoutSummary } from './WorkoutSummary'
+import { WorkoutSetup } from './WorkoutSetup'
+import { WorkoutStep } from './WorkoutStep'
+import { WorkoutFooter } from './WorkoutFooter'
+import { Plus } from 'lucide-react'
 import type { Exercise, ExercisePayload, CreateWorkoutPayload, WorkoutTemplate, TemplateExercise } from '@/types'
 
 interface LoggedExercise { exercise: Exercise; sets: any[] }
@@ -15,6 +18,7 @@ interface Props {
 }
 
 export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
+  const [currentStep, setCurrentStep] = useState(0) // 0: Setup, 1..N: Exercises, N+1: Summary
   const [name, setName] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [notes, setNotes] = useState('')
@@ -36,11 +40,7 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
                   exercise: te.exercise as Exercise,
                   sets: Array(te.target_sets || 3).fill(null).map((_, idx) => ({
                     set_number: idx + 1,
-                    reps: '',
-                    weight_kg: '',
-                    duration_seconds: '',
-                    rest_seconds: 90,
-                    notes: ''
+                    reps: '', weight_kg: '', duration_seconds: '', rest_seconds: 90, notes: ''
                   }))
                 }));
               setLogged(restored);
@@ -63,61 +63,81 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
         })),
       })
       setName(''); setNotes(''); setRpe(undefined); setLogged([])
+      setCurrentStep(0)
     } finally { setSaving(false) }
   }
 
+  const totalSteps = logged.length + 2
+  const isFinalStep = currentStep === logged.length + 1
+
+  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps - 1))
+  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0))
+
   return (
-    <div className="space-y-4">
-      <Card className="space-y-4">
-        <div>
-          <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Workout Name *</label>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Push Day A"
-            className="mt-1 w-full rounded-xl bg-gray-800 border-gray-700 px-4 py-3 text-base sm:text-sm text-white placeholder-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Date</label>
-            <input type="date" value={date} onChange={e => setDate(e.target.value)}
-              className="mt-1 w-full rounded-xl bg-gray-800 border-gray-700 px-4 py-3 text-base sm:text-sm text-white outline-none" />
-          </div>
-          <div>
-            <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">RPE (1–10)</label>
-            <input type="number" min={1} max={10} value={rpe ?? ''} onChange={e => setRpe(e.target.value ? Number(e.target.value) : undefined)}
-              placeholder="optional" className="mt-1 w-full rounded-xl bg-gray-800 border-gray-700 px-4 py-3 text-base sm:text-sm text-white placeholder-gray-600 outline-none" />
-          </div>
-        </div>
-        <div>
-          <label className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Notes (optional)</label>
-          <input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="e.g. PR day..."
-            className="mt-1 w-full rounded-xl bg-gray-800 border-gray-700 px-4 py-3 text-base sm:text-sm text-white placeholder-gray-600 outline-none" />
-        </div>
-      </Card>
+    <div className="flex flex-col min-h-screen pb-40">
+      <Stepper currentStep={currentStep} totalSteps={totalSteps} />
 
-      {logged.map((l, i) => (
-        <Card key={i} className="space-y-3">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="font-medium text-white">{l.exercise.name}</p>
-              <Badge variant={l.exercise.muscle_group}>{l.exercise.muscle_group}</Badge>
+      <div className="flex-1 space-y-6">
+        {currentStep === 0 && (
+          <WorkoutSetup
+            name={name} setName={setName}
+            date={date} setDate={setDate}
+            logged={logged} setLogged={setLogged}
+            onAddExercise={() => setPicking(true)}
+          />
+        )}
+
+        {currentStep > 0 && currentStep <= logged.length && (
+          <WorkoutStep
+            loggedExercise={logged[currentStep - 1]}
+            index={currentStep - 1}
+            onSetsChange={sets => setLogged(prev => prev.map((x, idx) => idx === currentStep - 1 ? { ...x, sets } : x))}
+            onAddExercise={() => setPicking(true)}
+          />
+        )}
+
+        {isFinalStep && (
+          <WorkoutSummary
+            rpe={rpe} onRpeChange={setRpe}
+            notes={notes} onNotesChange={setNotes}
+          />
+        )}
+      </div>
+
+      <WorkoutFooter
+        currentStep={currentStep}
+        isFinalStep={isFinalStep}
+        onPrev={prevStep}
+        onNext={nextStep}
+        onSubmit={handleSubmit}
+        saving={saving}
+        canNext={currentStep === 0 ? (logged.length > 0 && name.trim().length > 0) : true}
+        canSubmit={name.trim().length > 0}
+      />
+
+      {picking && (
+        <div className="fixed inset-0 z-[110] p-4 flex items-center justify-center bg-bg/90 backdrop-blur-md animate-in fade-in duration-300">
+          <Card className="w-full max-w-xl max-h-[85vh] flex flex-col p-0 shadow-2xl relative border-border overflow-hidden">
+            <div className="sticky top-0 z-10 flex items-center justify-between p-5 border-b border-border bg-card/80 backdrop-blur-xl">
+              <div>
+                <h2 className="text-sm font-bold text-text uppercase tracking-tight italic">Choose Exercise</h2>
+                <p className="text-[10px] text-muted font-bold tracking-widest mt-0.5 uppercase italic">Select from library</p>
+              </div>
+              <button
+                onClick={() => setPicking(false)}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-surface border border-border text-muted hover:text-text transition-all"
+              >
+                <Plus size={20} className="rotate-45" />
+              </button>
             </div>
-            <button onClick={() => setLogged(prev => prev.filter((_, idx) => idx !== i))} className="text-gray-600 hover:text-red-400 text-xs">Remove</button>
-          </div>
-          <SetLogger exercise={l.exercise} sets={l.sets}
-            onChange={sets => setLogged(prev => prev.map((x, idx) => idx === i ? { ...x, sets } : x))} />
-        </Card>
-      ))}
-
-      {picking ? (
-        <Card>
-          <ExerciseSelector exercises={exercises} onSelect={ex => { setLogged(p => [...p, { exercise: ex, sets: [] }]); setPicking(false) }} />
-          <button onClick={() => setPicking(false)} className="mt-3 text-xs text-gray-500">Cancel</button>
-        </Card>
-      ) : (
-        <Button variant="secondary" className="w-full" onClick={() => setPicking(true)}>+ Add Exercise</Button>
-      )}
-
-      {logged.length > 0 && (
-        <Button className="w-full" loading={saving} disabled={!name.trim()} onClick={handleSubmit}>Save Workout</Button>
+            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+              <ExerciseSelector
+                exercises={exercises}
+                onSelect={ex => { setLogged(p => [...p, { exercise: ex, sets: [] }]); setPicking(false) }}
+              />
+            </div>
+          </Card>
+        </div>
       )}
     </div>
   )

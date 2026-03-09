@@ -1,23 +1,56 @@
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
+import { X } from 'lucide-react'
+
 interface S { weight_kg?: number; reps?: number }
 interface Props { sets: S[]; onChange: (s: S[]) => void }
 
 export function WeightedBodyweightFields({ sets, onChange }: Props) {
   const upd = (i: number, f: keyof S, v: string) =>
-    onChange(sets.map((s,idx)=>idx===i?{...s,[f]:v===''?undefined:Number(v)}:s))
+    onChange(sets.map((s, idx) => idx === i ? { ...s, [f]: v === '' ? undefined : Number(v) } : s))
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {sets.map((s, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 w-6">#{i+1}</span>
-          <input type="number" placeholder="+kg (opt)" value={s.weight_kg ?? ''} onChange={e=>upd(i,'weight_kg',e.target.value)}
-            className="w-24 rounded bg-gray-800 px-2 py-1 text-sm text-white" />
-          <span className="text-gray-500">×</span>
-          <input type="number" placeholder="reps" value={s.reps ?? ''} onChange={e=>upd(i,'reps',e.target.value)}
-            className="w-20 rounded bg-gray-800 px-2 py-1 text-sm text-white" />
-          <button onClick={()=>onChange(sets.filter((_,idx)=>idx!==i))} className="text-gray-600 hover:text-red-400 text-xs">✕</button>
+        <div key={i} className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-300" style={{ animationDelay: `${i * 50}ms` }}>
+          <div className="flex-1 grid grid-cols-2 gap-3">
+            <div className="relative">
+              <Input
+                type="number"
+                inputMode="decimal"
+                placeholder="+0.0"
+                value={s.weight_kg ?? ''}
+                onChange={e => upd(i, 'weight_kg', e.target.value)}
+                className="text-center font-bold"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-muted uppercase italic pointer-events-none">kg</span>
+            </div>
+            <div className="relative">
+              <Input
+                type="number"
+                inputMode="numeric"
+                placeholder="0"
+                value={s.reps ?? ''}
+                onChange={e => upd(i, 'reps', e.target.value)}
+                className="text-center font-bold"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-muted uppercase italic pointer-events-none">reps</span>
+            </div>
+          </div>
+          <button
+            onClick={() => onChange(sets.filter((_, idx) => idx !== i))}
+            className="flex-none w-10 h-10 flex items-center justify-center rounded-xl text-muted hover:text-red-400 hover:bg-red-400/10 transition-all"
+          >
+            <X size={16} />
+          </button>
         </div>
       ))}
-      <button onClick={()=>onChange([...sets,{}])} className="text-xs text-blue-400 hover:text-blue-300">+ Add set</button>
+      <Button
+        variant="secondary"
+        className="w-full border-dashed py-3 italic"
+        onClick={() => onChange([...sets, {}])}
+      >
+        + Add Set
+      </Button>
     </div>
   )
 }
