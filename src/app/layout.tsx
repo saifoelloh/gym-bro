@@ -1,21 +1,39 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import Link from 'next/link'
+import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "GYM TRACKER",
-  description: "Track your lifts. Measure your gains.",
-};
+  title: 'GYM.LOG',
+  description: 'Personal gym tracker',
+}
+
+const NAV = [
+  { href: '/',         label: 'Dashboard' },
+  { href: '/log',      label: 'Log'       },
+  { href: '/history',  label: 'History'   },
+  { href: '/progress', label: 'Progress'  },
+]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="noise-bg min-h-screen bg-bg text-text">
-        <Navbar />
-        <main className="max-w-5xl mx-auto px-4 pt-8 pb-20 sm:pb-8">
-          {children}
-        </main>
+      <body className={`${inter.className} bg-gray-950 text-white min-h-screen`}>
+        <nav className="border-b border-gray-800 bg-gray-900 sticky top-0 z-10">
+          <div className="max-w-2xl mx-auto px-4 flex gap-1 h-14 items-center">
+            <span className="font-bold text-white mr-4">🏋️ GYM.LOG</span>
+            {NAV.map(({ href, label }) => (
+              <Link key={href} href={href}
+                className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                {label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+        {children}
       </body>
     </html>
-  );
+  )
 }
