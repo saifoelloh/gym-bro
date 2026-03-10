@@ -98,7 +98,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                             title="Edit"
                         >
                             <Pencil size={12} />
-                            <span>EDIT</span>
+                            <span className="hidden sm:inline">EDIT</span>
                         </button>
                         <button
                             onClick={() => onDuplicate(t.id)}
@@ -106,7 +106,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                             title="Copy"
                         >
                             <Copy size={12} />
-                            <span>COPY</span>
+                            <span className="hidden sm:inline">COPY</span>
                         </button>
                         <button
                             onClick={() => onDelete(t.id)}
@@ -114,7 +114,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                             title="Delete"
                         >
                             <Trash2 size={12} />
-                            <span>DELETE</span>
+                            <span className="hidden sm:inline">DELETE</span>
                         </button>
                     </div>
                 </div>
