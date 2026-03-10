@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-950 text-white min-h-screen pb-20 sm:pb-0`}>
-        <nav className="border-b border-gray-800 bg-gray-900 sticky top-0 z-10">
+        <nav className="border-b border-gray-800 bg-gray-900 sticky top-0 z-50">
           <div className="max-w-2xl mx-auto px-4 flex gap-1 h-14 items-center">
             <span className="font-bold text-white mr-4">🏋️ GYM.LOG</span>
             <div className="hidden sm:flex gap-1">

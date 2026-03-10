@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge'
 import { SetLogger } from './SetLogger'
 import type { Exercise } from '@/types'
 
-interface LoggedExercise { exercise: Exercise; sets: any[] }
+interface LoggedExercise { exercise: Exercise; sets: any[]; notes?: string }
 
 interface Props {
     loggedExercise: LoggedExercise
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function WorkoutStep({ loggedExercise, index, onSetsChange, onAddExercise }: Props) {
-    const { exercise, sets } = loggedExercise
+    const { exercise, sets, notes } = loggedExercise
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -34,6 +34,12 @@ export function WorkoutStep({ loggedExercise, index, onSetsChange, onAddExercise
                     <h2 className="text-3xl md:text-5xl font-bold text-text uppercase opacity-20">#{index + 1}</h2>
                 </div>
             </div>
+
+            {notes && (
+                <div className="bg-surface/30 border border-blue-500/20 rounded-xl p-3">
+                    <p className="text-sm font-medium text-blue-100 flex gap-2"><span className="font-bold text-blue-400 italic">NOTE:</span> {notes}</p>
+                </div>
+            )}
 
             <Card className="!p-0 overflow-hidden bg-surface/50 border-gray-800/50">
                 <div className="p-4 sm:p-6">

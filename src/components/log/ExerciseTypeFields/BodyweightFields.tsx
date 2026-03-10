@@ -14,6 +14,7 @@ export function BodyweightFields({ sets, onChange }: Props) {
             <div className="relative flex-1">
               <Input
                 type="number"
+                step="any"
                 inputMode="numeric"
                 placeholder="0"
                 value={s.reps ?? ''}

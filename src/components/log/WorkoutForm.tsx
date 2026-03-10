@@ -7,10 +7,10 @@ import { WorkoutSummary } from './WorkoutSummary'
 import { WorkoutSetup } from './WorkoutSetup'
 import { WorkoutStep } from './WorkoutStep'
 import { WorkoutFooter } from './WorkoutFooter'
-import { Plus } from 'lucide-react'
+import { Plus, X, AlertCircle } from 'lucide-react'
 import type { Exercise, ExercisePayload, CreateWorkoutPayload, WorkoutTemplate, TemplateExercise } from '@/types'
 
-interface LoggedExercise { exercise: Exercise; sets: any[] }
+interface LoggedExercise { exercise: Exercise; sets: any[]; notes?: string }
 interface Props {
   exercises: Exercise[];
   templateId?: string | null;
@@ -26,6 +26,7 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
   const [logged, setLogged] = useState<LoggedExercise[]>([])
   const [picking, setPicking] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
     if (templateId) {
@@ -38,6 +39,7 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
                 .sort((a: TemplateExercise, b: TemplateExercise) => a.exercise_order - b.exercise_order)
                 .map((te: TemplateExercise) => ({
                   exercise: te.exercise as Exercise,
+                  notes: te.notes,
                   sets: Array(te.target_sets || 3).fill(null).map((_, idx) => ({
                     set_number: idx + 1,
                     reps: '', weight_kg: '', duration_seconds: '', rest_seconds: 90, notes: ''
@@ -55,15 +57,49 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
     if (!name.trim() || !logged.length) return
     setSaving(true)
     try {
+      const validExercises = logged
+        .map((l, i): ExercisePayload => {
+          const validSets = l.sets
+            .filter(s =>
+              (s.weight_kg !== undefined && s.weight_kg !== '') ||
+              (s.reps !== undefined && s.reps !== '') ||
+              (s.duration_seconds !== undefined && s.duration_seconds !== '')
+            )
+            .map((s, si) => ({
+              ...s,
+              set_number: si + 1,
+              weight_kg: s.weight_kg === '' ? undefined : s.weight_kg,
+              reps: s.reps === '' ? undefined : s.reps,
+              duration_seconds: s.duration_seconds === '' ? undefined : s.duration_seconds
+            }));
+
+          return {
+            exerciseId: l.exercise.id,
+            exerciseOrder: i,
+            notes: l.notes,
+            sets: validSets
+          };
+        })
+        .filter(e => e.sets.length > 0);
+
+      if (validExercises.length === 0) {
+        setSaving(false);
+        return;
+      }
+
+      setSubmitError(null)
       await onSubmit({
         name: name.trim(), date, notes, rpe,
-        exercises: logged.map((l, i): ExercisePayload => ({
-          exerciseId: l.exercise.id, exerciseOrder: i,
-          sets: l.sets.map((s, si) => ({ ...s, set_number: si + 1 })),
-        })),
+        exercises: validExercises,
       })
       setName(''); setNotes(''); setRpe(undefined); setLogged([])
       setCurrentStep(0)
+    } catch (err: any) {
+      let msg = err.message || 'An error occurred while saving the workout. Please try again.'
+      if (msg.includes('invalid input syntax') || msg.includes('integer') || msg.includes('numeric')) {
+        msg = 'Invalid or empty numbers detected. Please double-check your set inputs (reps, weight, or duration).'
+      }
+      setSubmitError(msg)
     } finally { setSaving(false) }
   }
 
@@ -77,7 +113,7 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
     <div className="flex flex-col min-h-screen pb-40">
       <Stepper currentStep={currentStep} totalSteps={totalSteps} />
 
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 space-y-6 pt-2 px-2">
         {currentStep === 0 && (
           <WorkoutSetup
             name={name} setName={setName}
@@ -137,6 +173,26 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
               />
             </div>
           </Card>
+        </div>
+      )}
+
+      {submitError && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-sm bg-gray-950 border border-red-500/50 p-6 rounded-2xl shadow-2xl scale-in duration-200 relative">
+            <button
+              onClick={() => setSubmitError(null)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+            >
+              <X size={20} />
+            </button>
+            <div className="flex flex-col items-center text-center space-y-3 mt-2">
+              <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
+                <AlertCircle size={24} />
+              </div>
+              <h3 className="text-lg font-bold text-white uppercase tracking-tight">Submission Failed</h3>
+              <p className="text-xs text-gray-400 leading-relaxed max-w-[250px] mx-auto">{submitError}</p>
+            </div>
+          </div>
         </div>
       )}
     </div>

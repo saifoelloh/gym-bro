@@ -12,15 +12,25 @@ const WORKOUT_SELECT = `
 `
 
 export async function GET(req: NextRequest) {
-  const limit = Number(new URL(req.url).searchParams.get('limit') ?? 20)
+  const url = new URL(req.url)
+  const limit = Number(url.searchParams.get('limit') ?? 20)
+  const offset = Number(url.searchParams.get('offset') ?? 0)
+  const search = url.searchParams.get('search') || ''
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('workouts')
     .select(WORKOUT_SELECT)
     .order('date', { ascending: false })
     .order('exercise_order', { referencedTable: 'workout_exercises' })
     .order('set_number', { referencedTable: 'workout_exercises.sets' })
-    .limit(limit)
+
+  if (search) {
+    query = query.or(`name.ilike.%${search}%,notes.ilike.%${search}%`)
+  }
+
+  query = query.range(offset, offset + limit - 1)
+
+  const { data, error } = await query
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
@@ -41,7 +51,7 @@ export async function POST(req: NextRequest) {
   for (const ex of exercises) {
     const { data: we, error: weErr } = await supabase
       .from('workout_exercises')
-      .insert({ workout_id: workout.id, exercise_id: ex.exerciseId, exercise_order: ex.exerciseOrder })
+      .insert({ workout_id: workout.id, exercise_id: ex.exerciseId, exercise_order: ex.exerciseOrder, notes: ex.notes })
       .select('id')
       .single()
 

@@ -16,7 +16,13 @@ async function fetcher<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   workouts: {
-    list: (limit = 20) => fetcher<Workout[]>(`/workouts?limit=${limit}`),
+    list: (limit = 20, offset = 0, search = '') => {
+      const params = new URLSearchParams()
+      params.append('limit', limit.toString())
+      params.append('offset', offset.toString())
+      if (search) params.append('search', search)
+      return fetcher<Workout[]>(`/workouts?${params.toString()}`)
+    },
     get: (id: string) => fetcher<Workout>(`/workouts/${id}`),
     create: (body: CreateWorkoutPayload) =>
       fetcher<Workout>('/workouts', { method: 'POST', body: JSON.stringify(body) }),

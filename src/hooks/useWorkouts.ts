@@ -1,22 +1,54 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '@/lib/api/client'
 import type { Workout, CreateWorkoutPayload } from '@/types'
 
 export function useWorkouts(limit = 20) {
   const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [hasMore, setHasMore] = useState(true)
+  const [search, setSearch] = useState('')
 
-  const load = useCallback(() => {
-    setLoading(true)
+  const offsetRef = useRef(0)
+  const searchRef = useRef(search)
+  searchRef.current = search
+
+  const load = useCallback(async (reset = false) => {
+    if (reset) {
+      setLoading(true)
+      offsetRef.current = 0
+    } else {
+      setLoadingMore(true)
+    }
     setError(null)
-    api.workouts.list(limit)
-      .then(setWorkouts)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false))
+
+    try {
+      const currentSearch = searchRef.current
+      const data = await api.workouts.list(limit, offsetRef.current, currentSearch)
+
+      if (currentSearch !== searchRef.current) return
+
+      setWorkouts(prev => reset ? data : [...prev, ...data])
+      setHasMore(data.length === limit)
+      offsetRef.current += data.length
+    } catch (e: any) {
+      setError(e.message)
+    } finally {
+      if (reset) setLoading(false)
+      else setLoadingMore(false)
+    }
   }, [limit])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => {
+    load(true)
+  }, [search, load])
+
+  const loadMore = useCallback(() => {
+    if (!loading && !loadingMore && hasMore) {
+      load(false)
+    }
+  }, [loading, loadingMore, hasMore, load])
 
   const create = async (payload: CreateWorkoutPayload) => {
     const workout = await api.workouts.create(payload)
@@ -29,5 +61,5 @@ export function useWorkouts(limit = 20) {
     setWorkouts(prev => prev.filter(w => w.id !== id))
   }
 
-  return { workouts, loading, error, refetch: load, create, remove }
+  return { workouts, loading, loadingMore, hasMore, search, setSearch, loadMore, error, refetch: () => load(true), create, remove }
 }

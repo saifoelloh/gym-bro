@@ -18,18 +18,20 @@ export function RecentWorkoutsList({ workouts }: { workouts: Workout[] }) {
         const groups = Array.from(new Set(w.workout_exercises.map(we => we.exercises.muscle_group)))
         return (
           <li key={w.id}>
-            <Card className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-              <div className="min-w-0 w-full sm:w-auto">
-                <p className="font-medium text-white truncate">{w.name}</p>
-                <p className="text-sm text-gray-500">
-                  {new Date(w.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })}
-                  {' · '}{w.workout_exercises.length} exercises
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-1 justify-start sm:justify-end">
-                {groups.map(g => <Badge key={g} variant={g}>{g}</Badge>)}
-              </div>
-            </Card>
+            <Link href={`/workout/${w.id}/summary`} className="block group cursor-pointer">
+              <Card className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 transition-colors cursor-pointer group-hover:border-blue-500/50 group-hover:bg-surface/50">
+                <div className="min-w-0 w-full sm:w-auto">
+                  <p className="font-medium text-white truncate group-hover:text-blue-400 transition-colors">{w.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(w.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    {' · '}{w.workout_exercises.length} exercises
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-1 justify-start sm:justify-end">
+                  {groups.map(g => <Badge key={g} variant={g}>{g}</Badge>)}
+                </div>
+              </Card>
+            </Link>
           </li>
         )
       })}

@@ -27,6 +27,9 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
 
         workout.workout_exercises?.forEach(we => {
             md += `### ${we.exercises?.name || 'Unknown Exercise'}\n`
+            if (we.notes) {
+                md += `*Note: ${we.notes}*\n\n`
+            }
             if (!we.sets || we.sets.length === 0) {
                 md += `- No sets recorded\n\n`
                 return
@@ -40,7 +43,11 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                     const secs = String(set.duration_seconds % 60).padStart(2, '0')
                     setDetails.push(`${mins}:${secs}`)
                 }
-                md += `- Set ${set.set_number}: ${setDetails.join(' × ')}\n`
+                let setString = setDetails.length > 0 ? setDetails.join(' × ') : '(Empty Set)'
+                md += `- Set ${set.set_number}: ${setString}\n`
+                if (set.notes) {
+                    md += `  > ${set.notes}\n`
+                }
             })
             md += '\n'
         })
@@ -68,9 +75,16 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                 <h1 className="text-3xl font-black italic uppercase tracking-widest text-text">
                     Workout Complete
                 </h1>
-                <p className="text-muted font-medium">
+                <p className="text-muted font-medium px-4">
                     {workout.name} • {new Date(workout.date).toLocaleDateString()}
                 </p>
+
+                {workout.notes && (
+                    <div className="mt-6 mx-auto max-w-md p-4 bg-surface/30 border border-border/50 rounded-2xl text-left animate-in slide-in-from-bottom-2 fade-in duration-700 delay-200 fill-mode-both">
+                        <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1 italic">Workout Notes</p>
+                        <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">{workout.notes}</p>
+                    </div>
+                )}
             </div>
 
             <div className="space-y-3 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
@@ -93,18 +107,32 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                                 </div>
                             </div>
 
-                            {expandedId === we.id && we.sets && we.sets.length > 0 && (
+                            {expandedId === we.id && (
                                 <div className="mt-3 space-y-2 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-300">
-                                    {we.sets.map((set, idx) => (
-                                        <div key={set.id || idx} className="flex justify-between items-center text-xs px-3 py-2 bg-surface/50 rounded-lg border border-border/50">
-                                            <span className="text-muted font-bold uppercase tracking-wider text-[10px]">Set {set.set_number}</span>
-                                            <span className="text-text font-black italic">
-                                                {set.weight_kg ? `${set.weight_kg}kg × ` : ''}
-                                                {set.duration_seconds ? `${Math.floor(set.duration_seconds / 60)}:${String(set.duration_seconds % 60).padStart(2, '0')} × ` : ''}
-                                                {set.reps ? `${set.reps} reps` : ''}
-                                            </span>
+                                    {we.notes && (
+                                        <div className="bg-surface-lighter/50 border border-blue-500/20 rounded-lg p-2.5 mb-2">
+                                            <p className="text-xs text-blue-100 flex gap-2"><span className="font-bold text-blue-400 italic">NOTE:</span> {we.notes}</p>
                                         </div>
-                                    ))}
+                                    )}
+                                    {we.sets && we.sets.length > 0 ? we.sets.map((set, idx) => (
+                                        <div key={set.id || idx} className="flex flex-col text-xs px-3 py-2 bg-surface/50 rounded-lg border border-border/50">
+                                            <div className="flex justify-between items-center w-full">
+                                                <span className="text-muted font-bold uppercase tracking-wider text-[10px]">Set {set.set_number}</span>
+                                                <span className="text-text font-black italic">
+                                                    {set.weight_kg ? `${set.weight_kg}kg × ` : ''}
+                                                    {set.duration_seconds ? `${Math.floor(set.duration_seconds / 60)}:${String(set.duration_seconds % 60).padStart(2, '0')} × ` : ''}
+                                                    {set.reps ? `${set.reps} reps` : ''}
+                                                </span>
+                                            </div>
+                                            {set.notes && (
+                                                <div className="mt-2 pt-2 border-t border-border/30 text-[10px] text-muted-foreground italic">
+                                                    "{set.notes}"
+                                                </div>
+                                            )}
+                                        </div>
+                                    )) : (
+                                        <div className="text-center text-xs text-muted py-2">No sets recorded</div>
+                                    )}
                                 </div>
                             )}
                         </div>

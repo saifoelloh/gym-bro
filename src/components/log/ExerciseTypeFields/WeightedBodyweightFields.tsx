@@ -16,6 +16,7 @@ export function WeightedBodyweightFields({ sets, onChange }: Props) {
             <div className="relative">
               <Input
                 type="number"
+                step="any"
                 inputMode="decimal"
                 placeholder="+0.0"
                 value={s.weight_kg ?? ''}
@@ -27,6 +28,7 @@ export function WeightedBodyweightFields({ sets, onChange }: Props) {
             <div className="relative">
               <Input
                 type="number"
+                step="any"
                 inputMode="numeric"
                 placeholder="0"
                 value={s.reps ?? ''}

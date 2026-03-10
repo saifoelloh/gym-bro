@@ -72,6 +72,7 @@ export interface SetPayload {
 export interface ExercisePayload {
   exerciseId: string
   exerciseOrder: number
+  notes?: string
   sets: SetPayload[]
 }
 
