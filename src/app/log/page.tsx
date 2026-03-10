@@ -22,7 +22,7 @@ function LogContent() {
       <WorkoutForm
         exercises={exercises}
         templateId={templateId}
-        onSubmit={async p => { await create(p); router.push('/') }}
+        onSubmit={async p => { const w = await create(p); router.push(`/workout/${w.id}/summary`) }}
       />
     </main>
   )

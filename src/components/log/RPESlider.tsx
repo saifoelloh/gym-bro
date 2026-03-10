@@ -5,7 +5,7 @@ interface Props {
     onChange: (val: number) => void
 }
 
-const RPE_DATA: Record<number, { emoji: string; label: string; color: string }> = {
+export const RPE_DATA: Record<number, { emoji: string; label: string; color: string }> = {
     1: { emoji: '😴', label: 'Very Easy', color: 'rgb(34, 197, 94)' },
     2: { emoji: '🙂', label: 'Easy', color: 'rgb(34, 197, 94)' },
     3: { emoji: '😊', label: 'Moderate', color: 'rgb(132, 204, 22)' },
