@@ -27,7 +27,7 @@ export function WorkoutFooter({
             <div className="max-w-2xl mx-auto flex gap-3 pointer-events-auto">
                 {currentStep > 0 && (
                     <button
-                        className="px-5 h-12 rounded-xl bg-surface border border-border text-muted hover:text-text hover:border-subtle active:scale-95 transition-all flex items-center justify-center shrink-0"
+                        className="px-5 h-12 rounded-xl bg-surface border border-border text-muted hover:text-foreground hover:border-subtle active:scale-95 transition-all flex items-center justify-center shrink-0"
                         onClick={onPrev}
                     >
                         <ChevronLeft size={20} />
@@ -36,7 +36,7 @@ export function WorkoutFooter({
 
                 {isFinalStep ? (
                     <Button
-                        className="flex-1 h-12 rounded-xl text-[11px] uppercase italic tracking-widest font-black"
+                        className="flex-1 h-12 rounded-xl text-micro uppercase italic tracking-widest font-black"
                         loading={saving}
                         disabled={!canSubmit}
                         onClick={onSubmit}
@@ -47,7 +47,7 @@ export function WorkoutFooter({
                 ) : (
                     <Button
                         variant="secondary"
-                        className="flex-1 h-12 rounded-xl text-[11px] uppercase italic tracking-widest font-black bg-surface border border-border text-text hover:bg-gray-800"
+                        className="flex-1 h-12 rounded-xl text-micro uppercase italic tracking-widest font-black bg-surface border border-border text-foreground hover:bg-surface"
                         disabled={!canNext}
                         onClick={onNext}
                     >

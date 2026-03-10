@@ -30,22 +30,22 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
     const hasMore = allExercises.length > 3
 
     return (
-        <Card className="p-4 sm:p-5 hover:border-blue-500/30 transition-colors relative group">
+        <Card className="p-4 sm:p-5 hover:border-info/30 transition-colors relative group">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6">
                 <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-bold text-white tracking-tight leading-tight">{t.name}</h3>
+                    <h3 className="text-xl font-bold text-foreground tracking-tight leading-tight">{t.name}</h3>
                     {t.description && (
-                        <p className="text-sm text-gray-400 mt-1">{t.description}</p>
+                        <p className="text-sm text-muted mt-1">{t.description}</p>
                     )}
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
-                        <span className="text-[11px] text-gray-400 font-medium">
-                            {allExercises.length} Exercises
+                        <span className="text-micro text-muted font-medium">
+                            {allExercises.length} {allExercises.length === 1 ? 'Exercise' : 'Exercises'}
                         </span>
-                        <span className="text-[11px] text-gray-400 font-medium">
+                        <span className="text-micro text-muted font-medium">
                             ~{totalSets} Total Sets
                         </span>
-                        <span className="text-[11px] text-gray-500">
+                        <span className="text-micro text-muted">
                             {format(new Date(t.updated_at), 'dd MMM yyyy')}
                         </span>
                     </div>
@@ -56,13 +56,13 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                         ))}
                     </div>
 
-                    <div className="mt-4 space-y-2 border-t border-gray-800 pt-3">
+                    <div className="mt-4 space-y-2 border-t border-border pt-3">
                         {visibleExercises.map((te) => (
                             <div key={te.id} className="flex items-center justify-between text-xs">
-                                <span className="text-gray-300 truncate pr-2">
+                                <span className="text-foreground truncate pr-2">
                                     {te.exercise?.name}
                                 </span>
-                                <span className="text-gray-500 whitespace-nowrap">
+                                <span className="text-muted whitespace-nowrap">
                                     {te.target_sets} sets
                                 </span>
                             </div>
@@ -71,7 +71,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                         {hasMore && (
                             <button
                                 onClick={() => setExpanded(!expanded)}
-                                className="text-[11px] text-blue-400 font-medium mt-1 hover:text-blue-300 transition-colors"
+                                className="text-micro text-info font-medium mt-1 hover:text-blue-300 transition-colors"
                             >
                                 <div className="flex items-center gap-1">
                                     {expanded ? 'Show Less' : `Show ${allExercises.length - 3} More`}
@@ -85,7 +85,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                 <div className="flex flex-col gap-3 mt-4 sm:mt-0 flex-shrink-0 sm:w-32">
                     <Link
                         href={`/log?template=${t.id}`}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 text-xs py-3.5 sm:py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/10 active:scale-95"
+                        className="w-full bg-info hover:bg-info/90 text-foreground flex items-center justify-center gap-2 text-xs py-3.5 sm:py-2.5 rounded-xl font-black uppercase italic tracking-widest transition-all shadow-lg shadow-info/20 active:scale-95"
                     >
                         <Play size={14} className="fill-current" />
                         START
@@ -94,7 +94,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                     <div className="grid grid-cols-3 sm:flex sm:flex-col gap-2">
                         <button
                             onClick={() => onEdit(t)}
-                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-[10px] font-bold text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800 gap-1.5"
+                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-micro font-bold text-muted hover:text-foreground bg-surface/50 hover:bg-surface rounded-lg transition-colors border border-border gap-1.5"
                             title="Edit"
                         >
                             <Pencil size={12} />
@@ -102,7 +102,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                         </button>
                         <button
                             onClick={() => onDuplicate(t.id)}
-                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-[10px] font-bold text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors border border-gray-800 gap-1.5"
+                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-micro font-bold text-muted hover:text-foreground bg-surface/50 hover:bg-surface rounded-lg transition-colors border border-border gap-1.5"
                             title="Copy"
                         >
                             <Copy size={12} />
@@ -110,7 +110,7 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
                         </button>
                         <button
                             onClick={() => onDelete(t.id)}
-                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-[10px] font-bold text-red-400/80 hover:text-red-400 bg-red-500/5 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20 gap-1.5"
+                            className="flex flex-col sm:flex-row items-center justify-center py-2.5 sm:px-3 text-micro font-bold text-error/80 hover:text-error bg-error/5 hover:bg-error/10 rounded-lg transition-colors border border-transparent hover:border-error/20 gap-1.5"
                             title="Delete"
                         >
                             <Trash2 size={12} />

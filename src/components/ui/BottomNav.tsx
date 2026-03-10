@@ -15,17 +15,17 @@ export function BottomNav() {
     const pathname = usePathname()
 
     return (
-        <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 pb-safe z-50">
+        <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-bg border-t border-border pb-safe z-50">
             <div className="flex justify-around items-center h-16">
                 {NAV.map(({ href, label, icon: Icon }) => {
                     const isActive = pathname === href
                     return (
                         <Link key={href} href={href}
-                            className={`flex flex-col items-center justify-center flex-1 h-full space-y-1 transition-colors ${isActive ? 'text-blue-500' : 'text-gray-400 hover:text-gray-200'
+                            className={`flex flex-col items-center justify-center flex-1 h-full space-y-1 transition-colors ${isActive ? 'text-info' : 'text-muted hover:text-foreground'
                                 }`}
                         >
                             <Icon size={20} />
-                            <span className="text-[10px] font-medium">{label}</span>
+                            <span className="text-micro font-medium">{label}</span>
                         </Link>
                     )
                 })}

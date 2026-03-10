@@ -21,8 +21,8 @@ export function StatsGrid({ workouts }: { workouts: Workout[] }) {
         { label: 'Muscle Groups Hit', value: muscleGroups },
       ].map(({ label, value }) => (
         <Card key={label} className="text-center">
-          <p className="text-2xl font-bold text-white">{value}</p>
-          <p className="mt-1 text-xs text-gray-500">{label}</p>
+          <p className="text-2xl font-bold text-foreground">{value}</p>
+          <p className="mt-1 text-xs text-muted">{label}</p>
         </Card>
       ))}
     </div>

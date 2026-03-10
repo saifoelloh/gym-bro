@@ -72,7 +72,7 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                 >
                     {emoji}
                 </div>
-                <h1 className="text-3xl font-black italic uppercase tracking-widest text-text">
+                <h1 className="text-3xl font-black italic uppercase tracking-widest text-foreground">
                     Workout Complete
                 </h1>
                 <p className="text-muted font-medium px-4">
@@ -82,13 +82,13 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                 {workout.notes && (
                     <div className="mt-6 mx-auto max-w-md p-4 bg-surface/30 border border-border/50 rounded-2xl text-left animate-in slide-in-from-bottom-2 fade-in duration-700 delay-200 fill-mode-both">
                         <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1 italic">Workout Notes</p>
-                        <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">{workout.notes}</p>
+                        <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{workout.notes}</p>
                     </div>
                 )}
             </div>
 
             <div className="space-y-3 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
-                <h3 className="text-[11px] font-black italic uppercase tracking-widest text-muted px-1">
+                <h3 className="text-micro font-black italic uppercase tracking-widest text-muted px-1">
                     Workout Summary
                 </h3>
                 <Card className="p-4 divide-y divide-border">
@@ -99,10 +99,10 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                                 onClick={() => setExpandedId(expandedId === we.id ? null : we.id)}
                             >
                                 <div className="flex flex-col">
-                                    <span className="font-bold text-text truncate max-w-[80%] group-hover:text-blue-500 transition-colors">{we.exercises?.name || 'Unknown Exercise'}</span>
-                                    <span className="text-[10px] text-muted font-bold tracking-widest uppercase italic mt-0.5">{we.sets?.length || 0} Sets</span>
+                                    <span className="font-bold text-foreground truncate max-w-[80%] group-hover:text-info transition-colors">{we.exercises?.name || 'Unknown Exercise'}</span>
+                                    <span className="text-micro text-muted font-bold tracking-widest uppercase italic mt-0.5">{we.sets?.length || 0} Sets</span>
                                 </div>
-                                <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-muted group-hover:text-text transition-colors">
+                                <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-muted group-hover:text-foreground transition-colors">
                                     {expandedId === we.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                                 </div>
                             </div>
@@ -110,22 +110,22 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                             {expandedId === we.id && (
                                 <div className="mt-3 space-y-2 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-300">
                                     {we.notes && (
-                                        <div className="bg-surface-lighter/50 border border-blue-500/20 rounded-lg p-2.5 mb-2">
-                                            <p className="text-xs text-blue-100 flex gap-2"><span className="font-bold text-blue-400 italic">NOTE:</span> {we.notes}</p>
+                                        <div className="bg-surface-lighter/50 border border-info/20 rounded-lg p-2.5 mb-2">
+                                            <p className="text-xs text-blue-100 flex gap-2"><span className="font-bold text-info italic">NOTE:</span> {we.notes}</p>
                                         </div>
                                     )}
                                     {we.sets && we.sets.length > 0 ? we.sets.map((set, idx) => (
                                         <div key={set.id || idx} className="flex flex-col text-xs px-3 py-2 bg-surface/50 rounded-lg border border-border/50">
                                             <div className="flex justify-between items-center w-full">
-                                                <span className="text-muted font-bold uppercase tracking-wider text-[10px]">Set {set.set_number}</span>
-                                                <span className="text-text font-black italic">
+                                                <span className="text-muted font-bold uppercase tracking-wider text-micro">Set {set.set_number}</span>
+                                                <span className="text-foreground font-black italic">
                                                     {set.weight_kg ? `${set.weight_kg}kg × ` : ''}
                                                     {set.duration_seconds ? `${Math.floor(set.duration_seconds / 60)}:${String(set.duration_seconds % 60).padStart(2, '0')} × ` : ''}
                                                     {set.reps ? `${set.reps} reps` : ''}
                                                 </span>
                                             </div>
                                             {set.notes && (
-                                                <div className="mt-2 pt-2 border-t border-border/30 text-[10px] text-muted-foreground italic">
+                                                <div className="mt-2 pt-2 border-t border-border/30 text-micro text-muted-foreground italic">
                                                     "{set.notes}"
                                                 </div>
                                             )}
@@ -147,14 +147,14 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                 <div className="max-w-xl mx-auto flex gap-3">
                     <Button
                         variant="secondary"
-                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-surface border border-border text-text hover:bg-gray-800"
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-surface border border-border text-foreground hover:bg-surface"
                         onClick={exportToMarkdown}
                         title="Export to Markdown"
                     >
                         <Download size={20} />
                     </Button>
                     <Button
-                        className="flex-1 h-12 rounded-xl text-[11px] uppercase italic tracking-widest font-black"
+                        className="flex-1 h-12 rounded-xl text-micro uppercase italic tracking-widest font-black"
                         onClick={() => router.push('/')}
                     >
                         Back to Home

@@ -12,8 +12,8 @@ interface Props {
 export function TemplateList({ templates, onEdit, onDuplicate, onDelete }: Props) {
     if (templates.length === 0) {
         return (
-            <div className="text-center py-20 border-2 border-dashed border-gray-800 rounded-2xl">
-                <p className="text-gray-500 text-sm">No templates saved yet.</p>
+            <div className="text-center py-20 border-2 border-dashed border-border rounded-2xl">
+                <p className="text-muted text-sm">No templates saved yet.</p>
             </div>
         )
     }

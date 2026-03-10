@@ -2,10 +2,10 @@ import type { ButtonHTMLAttributes } from 'react'
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost'
 const styles: Record<Variant, string> = {
-  primary: 'bg-blue-600 hover:bg-blue-500 text-text font-black uppercase italic tracking-widest shadow-lg shadow-blue-500/20 active:scale-95',
-  secondary: 'bg-surface hover:bg-gray-800 text-subtle border border-border transition-all active:scale-95',
-  danger: 'bg-red-900/40 hover:bg-red-800/60 text-red-300 border border-red-500/20 active:scale-95',
-  ghost: 'bg-transparent hover:bg-surface text-muted hover:text-text active:scale-95',
+  primary: 'bg-info hover:bg-info/90 text-foreground font-black uppercase italic tracking-widest shadow-lg shadow-info/20 active:scale-95',
+  secondary: 'bg-surface hover:bg-surface-hover text-subtle border border-border transition-all active:scale-95',
+  danger: 'bg-error/10 hover:bg-error/20 text-error border border-error/20 active:scale-95',
+  ghost: 'bg-transparent hover:bg-surface text-muted hover:text-foreground active:scale-95',
 }
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> { variant?: Variant; loading?: boolean }

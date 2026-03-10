@@ -156,12 +156,12 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
           <Card className="w-full max-w-xl max-h-[85vh] flex flex-col p-0 shadow-2xl relative border-border overflow-hidden">
             <div className="sticky top-0 z-10 flex items-center justify-between p-5 border-b border-border bg-card/80 backdrop-blur-xl">
               <div>
-                <h2 className="text-sm font-bold text-text uppercase tracking-tight italic">Choose Exercise</h2>
-                <p className="text-[10px] text-muted font-bold tracking-widest mt-0.5 uppercase italic">Select from library</p>
+                <h2 className="text-sm font-bold text-foreground uppercase tracking-tight italic">Choose Exercise</h2>
+                <p className="text-micro text-muted font-bold tracking-widest mt-0.5 uppercase italic">Select from library</p>
               </div>
               <button
                 onClick={() => setPicking(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-surface border border-border text-muted hover:text-text transition-all"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-surface border border-border text-muted hover:text-foreground transition-all"
               >
                 <Plus size={20} className="rotate-45" />
               </button>
@@ -178,19 +178,19 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
 
       {submitError && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-sm bg-gray-950 border border-red-500/50 p-6 rounded-2xl shadow-2xl scale-in duration-200 relative">
+          <div className="w-full max-w-sm bg-bg border border-error/50 p-6 rounded-2xl shadow-2xl scale-in duration-200 relative">
             <button
               onClick={() => setSubmitError(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+              className="absolute top-4 right-4 text-muted hover:text-foreground transition-colors"
             >
               <X size={20} />
             </button>
             <div className="flex flex-col items-center text-center space-y-3 mt-2">
-              <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
+              <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error mb-2">
                 <AlertCircle size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight">Submission Failed</h3>
-              <p className="text-xs text-gray-400 leading-relaxed max-w-[250px] mx-auto">{submitError}</p>
+              <h3 className="text-lg font-bold text-foreground uppercase tracking-tight">Submission Failed</h3>
+              <p className="text-xs text-muted leading-relaxed max-w-[250px] mx-auto">{submitError}</p>
             </div>
           </div>
         </div>

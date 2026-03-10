@@ -24,14 +24,14 @@ export default function HistoryPage() {
   }, [hasMore, loading, loadingMore, loadMore])
 
   if (loading && workouts.length === 0) return <LoadingSpinner label="Loading history..." />
-  if (error) return <p className="text-red-500 p-4">{error}</p>
+  if (error) return <p className="text-error p-4">{error}</p>
 
   return (
     <main className="max-w-2xl mx-auto p-4 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-4">
         <div className="w-full md:w-auto">
-          <h1 className="text-3xl font-black italic uppercase tracking-widest text-text">History</h1>
-          <p className="text-[10px] uppercase font-bold tracking-widest text-muted mt-1">Review Sessions</p>
+          <h1 className="text-3xl font-black italic uppercase tracking-widest text-foreground">History</h1>
+          <p className="text-micro uppercase font-bold tracking-widest text-muted mt-1">Review Sessions</p>
         </div>
 
         <div className="w-full md:w-auto flex-1 md:max-w-xs relative">
@@ -41,7 +41,7 @@ export default function HistoryPage() {
             placeholder="Search workouts..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-surface border border-border rounded-xl text-sm text-text placeholder:text-muted focus:outline-none focus:border-green-500/50 transition-colors"
+            className="w-full pl-9 pr-4 py-2 bg-surface border border-border rounded-xl text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-success/50 transition-colors"
           />
         </div>
       </div>

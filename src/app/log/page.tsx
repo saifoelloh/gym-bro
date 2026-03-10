@@ -14,11 +14,11 @@ function LogContent() {
   const { create } = useWorkouts()
 
   if (loading) return <LoadingSpinner label="Loading exercises..." />
-  if (error) return <p className="text-red-500 p-4">{error}</p>
+  if (error) return <p className="text-error p-4">{error}</p>
 
   return (
     <main className="max-w-2xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold text-white">Log Workout</h1>
+      <h1 className="text-2xl font-bold text-foreground">Log Workout</h1>
       <WorkoutForm
         exercises={exercises}
         templateId={templateId}

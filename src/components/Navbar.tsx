@@ -22,7 +22,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <Dumbbell size={20} className="text-accent group-hover:rotate-12 transition-transform" />
-            <span className="font-display text-xl tracking-widest text-text">
+            <span className="font-display text-xl tracking-widest text-foreground">
               GYM<span className="text-accent">.</span>LOG
             </span>
           </Link>
@@ -39,7 +39,7 @@ export default function Navbar() {
                     px-3 py-1.5 text-xs font-display tracking-widest rounded transition-colors
                     ${active
                       ? 'text-accent border-b-2 border-accent'
-                      : 'text-muted hover:text-text'
+                      : 'text-muted hover:text-foreground'
                     }
                   `}
                 >
@@ -63,11 +63,11 @@ export default function Navbar() {
                 href={href}
                 className={`
                   flex flex-col items-center justify-center gap-1 transition-colors
-                  ${active ? 'text-accent' : 'text-muted hover:text-text'}
+                  ${active ? 'text-accent' : 'text-muted hover:text-foreground'}
                 `}
               >
                 <Icon size={18} />
-                <span className="font-display text-[10px] tracking-wider">{label}</span>
+                <span className="font-display text-micro tracking-wider">{label}</span>
               </Link>
             );
           })}

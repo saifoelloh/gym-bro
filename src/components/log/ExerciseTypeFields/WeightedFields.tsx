@@ -23,7 +23,7 @@ export function WeightedFields({ sets, onChange }: Props) {
                 onChange={e => upd(i, 'weight_kg', e.target.value)}
                 className="text-center font-bold"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-muted uppercase italic pointer-events-none">kg</span>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-nano font-black text-muted uppercase italic pointer-events-none">kg</span>
             </div>
             <div className="relative">
               <Input
@@ -35,12 +35,12 @@ export function WeightedFields({ sets, onChange }: Props) {
                 onChange={e => upd(i, 'reps', e.target.value)}
                 className="text-center font-bold"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-muted uppercase italic pointer-events-none">reps</span>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-nano font-black text-muted uppercase italic pointer-events-none">reps</span>
             </div>
           </div>
           <button
             onClick={() => onChange(sets.filter((_, idx) => idx !== i))}
-            className="flex-none w-10 h-10 flex items-center justify-center rounded-xl text-muted hover:text-red-400 hover:bg-red-400/10 transition-all"
+            className="flex-none w-10 h-10 flex items-center justify-center rounded-xl text-muted hover:text-error hover:bg-error/10 transition-all"
           >
             <X size={16} />
           </button>

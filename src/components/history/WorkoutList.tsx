@@ -4,7 +4,7 @@ import type { Workout } from '@/types'
 interface Props { workouts: Workout[]; onDelete?: (id: string) => void }
 
 export function WorkoutList({ workouts, onDelete }: Props) {
-  if (!workouts.length) return <p className="text-center text-gray-500 py-12">No workouts found.</p>
+  if (!workouts.length) return <p className="text-center text-muted py-12">No workouts found.</p>
 
   const groupedWorkouts = workouts.reduce((groups, workout) => {
     const dateKey = workout.date.split('T')[0];
@@ -28,7 +28,7 @@ export function WorkoutList({ workouts, onDelete }: Props) {
 
         return (
           <div key={dateKey} className="space-y-3">
-            <h3 className="text-[10px] font-black tracking-[0.2em] text-muted uppercase ml-1">
+            <h3 className="text-micro font-black tracking-[0.2em] text-muted uppercase ml-1">
               {day} {month} {year}
             </h3>
             <ul className="space-y-3">

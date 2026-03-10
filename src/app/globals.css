@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .gym-label {
+    @apply font-black italic uppercase tracking-widest text-micro;
+  }
+}

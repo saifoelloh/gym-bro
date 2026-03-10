@@ -9,7 +9,7 @@ export function MuscleDistributionChart({ data }: { data: ProgressPoint[] }) {
     acc[d.exercise_name] = (acc[d.exercise_name] ?? 0) + 1; return acc
   }, {})
   const d = Object.entries(counts).map(([name, value]) => ({ name, value }))
-  if (!d.length) return <p className="text-center text-gray-500 py-8">No data yet.</p>
+  if (!d.length) return <p className="text-center text-muted py-8">No data yet.</p>
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">

@@ -63,25 +63,25 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
       >
         <div className="flex items-center gap-3">
           <span
-            className="text-[10px] font-mono px-2 py-0.5 rounded border"
+            className="text-micro font-mono px-2 py-0.5 rounded border"
             style={{ backgroundColor: `${color}10`, color, borderColor: `${color}40` }}
           >
             {index + 1}
           </span>
           <div>
             <p className="font-display tracking-widest text-sm uppercase">{name}</p>
-            <p className="font-mono text-[10px] text-muted uppercase">
+            <p className="font-mono text-micro text-muted uppercase">
               {muscle_group}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <span className="font-mono text-[10px] text-muted block uppercase">{sets.length} sets</span>
+            <span className="font-mono text-micro text-muted block uppercase">{sets.length} sets</span>
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); onRemove(); }}
-            className="text-muted hover:text-red-400 transition-colors p-2 rounded-full hover:bg-red-500/10"
+            className="text-muted hover:text-error transition-colors p-2 rounded-full hover:bg-error/10"
           >
             <Trash2 size={16} />
           </button>
@@ -100,7 +100,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                   <span className="font-mono text-xs text-muted uppercase tracking-widest">SET {set.set_number}</span>
                   <button
                     onClick={() => removeSet(i)}
-                    className="text-muted hover:text-red-400 p-1"
+                    className="text-muted hover:text-error p-1"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -118,7 +118,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                   {/* Duration (timed) */}
                   {type === 'timed' && (
                     <div>
-                      <label className="font-mono text-[10px] text-muted block mb-1 uppercase tracking-tighter">SECONDS</label>
+                      <label className="font-mono text-micro text-muted block mb-1 uppercase tracking-tighter">SECONDS</label>
                       <input
                         type="number"
                         placeholder="30"
@@ -133,7 +133,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                   {/* Reps (non-timed) */}
                   {type !== 'timed' && (
                     <div>
-                      <label className="font-mono text-[10px] text-muted block mb-1 uppercase tracking-tighter">REPS</label>
+                      <label className="font-mono text-micro text-muted block mb-1 uppercase tracking-tighter">REPS</label>
                       <input
                         type="number"
                         placeholder="0"
@@ -148,7 +148,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                   {/* Weight (weighted / weighted_bodyweight) */}
                   {(type === 'weighted' || type === 'weighted_bodyweight') && (
                     <div>
-                      <label className="font-mono text-[10px] text-muted block mb-1 uppercase tracking-tighter">
+                      <label className="font-mono text-micro text-muted block mb-1 uppercase tracking-tighter">
                         {type === 'weighted_bodyweight' ? '+KG' : 'KG'}
                       </label>
                       <input
@@ -166,7 +166,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                   {/* Assist KG (assisted) */}
                   {type === 'assisted' && (
                     <div>
-                      <label className="font-mono text-[10px] block mb-1 uppercase tracking-tighter" style={{ color: '#4ECDC4' }}>
+                      <label className="font-mono text-micro block mb-1 uppercase tracking-tighter" style={{ color: '#4ECDC4' }}>
                         ASSIST KG
                       </label>
                       <input
@@ -184,7 +184,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
 
                   {/* Rest time */}
                   <div>
-                    <label className="font-mono text-[10px] text-muted block mb-1 uppercase tracking-tighter">REST</label>
+                    <label className="font-mono text-micro text-muted block mb-1 uppercase tracking-tighter">REST</label>
                     <select
                       value={set.rest_seconds}
                       onChange={(e) => updateSet(i, 'rest_seconds', Number(e.target.value))}
@@ -201,7 +201,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                 {/* Remove set (Desktop) */}
                 <button
                   onClick={() => removeSet(i)}
-                  className="hidden sm:flex text-muted hover:text-red-400 transition-colors p-2 mb-1 rounded-full hover:bg-red-500/10"
+                  className="hidden sm:flex text-muted hover:text-error transition-colors p-2 mb-1 rounded-full hover:bg-error/10"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -214,7 +214,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
             <div className="relative">
               <div className="flex items-center gap-2 mb-2 px-1">
                 <FileText size={12} className="text-muted" />
-                <label className="font-mono text-[10px] text-muted uppercase tracking-widest">EXERCISE NOTES</label>
+                <label className="font-mono text-micro text-muted uppercase tracking-widest">EXERCISE NOTES</label>
               </div>
               <textarea
                 placeholder="How did this exercise feel? Any technique cues?"
@@ -226,7 +226,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
 
             <button
               onClick={addSet}
-              className="w-full h-12 flex items-center justify-center gap-3 border border-dashed border-border/60 hover:border-accent hover:bg-accent/5 rounded-lg font-display tracking-[0.2em] text-[10px] text-muted hover:text-accent transition-all"
+              className="w-full h-12 flex items-center justify-center gap-3 border border-dashed border-border/60 hover:border-accent hover:bg-accent/5 rounded-lg font-display tracking-[0.2em] text-micro text-muted hover:text-accent transition-all"
             >
               <Plus size={16} />
               ADD SET

@@ -18,11 +18,11 @@ export function ExerciseSelector({ exercises, onSelect }: Props) {
   return (
     <div className="space-y-3">
       <input type="text" placeholder="Search exercise..." value={search} onChange={e => setSearch(e.target.value)}
-        className="w-full rounded-lg bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500" />
+        className="w-full rounded-lg bg-surface px-3 py-2 text-sm text-foreground placeholder-gray-500" />
       <div className="flex flex-wrap gap-1">
         {['all',...GROUPS].map(g => (
           <button key={g} onClick={() => setFilter(g)}
-            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${filter===g?'bg-blue-600 text-white':'bg-gray-800 text-gray-400'}`}>
+            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${filter===g?'bg-info text-foreground':'bg-surface text-muted'}`}>
             {g}
           </button>
         ))}
@@ -31,10 +31,10 @@ export function ExerciseSelector({ exercises, onSelect }: Props) {
         {filtered.map(ex => (
           <li key={ex.id}>
             <button onClick={() => onSelect(ex)}
-              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-gray-800 text-left">
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-surface text-left">
               <div>
-                <span className="text-white">{ex.name}</span>
-                {ex.sub_category && <span className="text-xs text-gray-500 ml-2">{ex.sub_category}</span>}
+                <span className="text-foreground">{ex.name}</span>
+                {ex.sub_category && <span className="text-xs text-muted ml-2">{ex.sub_category}</span>}
               </div>
               <Badge variant={ex.muscle_group}>{ex.muscle_group}</Badge>
             </button>

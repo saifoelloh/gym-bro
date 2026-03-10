@@ -129,12 +129,12 @@ export function WorkoutCard({ workout, onDelete }: Props) {
 
           <div className="min-w-0 flex-1 py-1 pr-2">
             <Link href={`/workout/${workout.id}/summary`} className="block group/link">
-              <p className="font-black italic text-text text-[17px] sm:text-xl leading-tight truncate mb-1 group-hover/link:text-blue-400 transition-colors">
+              <p className="font-black italic text-foreground text-[17px] sm:text-xl leading-tight truncate mb-1 group-hover/link:text-info transition-colors">
                 {workout.name}
               </p>
             </Link>
 
-            <p className="font-mono text-[10px] sm:text-xs text-muted tracking-wider truncate flex gap-1.5 sm:gap-2 items-center">
+            <p className="font-mono text-micro sm:text-xs text-muted tracking-wider truncate flex gap-1.5 sm:gap-2 items-center">
               <span className="capitalize">{dayName}</span>
               <span className="opacity-50">•</span>
               <span>{workout.workout_exercises.length} gerakan</span>
@@ -146,7 +146,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
           <div className="flex items-center gap-2 shrink-0">
             {workout.rpe && (
               <div
-                className="flex items-center px-2 py-0.5 rounded-full text-[10px] font-black italic tracking-widest hidden sm:flex"
+                className="flex items-center px-2 py-0.5 rounded-full text-micro font-black italic tracking-widest hidden sm:flex"
                 style={{
                   color: rpeColorInfo?.color,
                   backgroundColor: `${rpeColorInfo?.color}1A`,
@@ -164,7 +164,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
                   e.stopPropagation()
                   setShowMenu(!showMenu)
                 }}
-                className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors border ${showMenu ? 'bg-surface border-border text-text' : 'text-muted hover:text-text hover:bg-surface border-transparent hover:border-border/50'
+                className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors border ${showMenu ? 'bg-surface border-border text-foreground' : 'text-muted hover:text-foreground hover:bg-surface border-transparent hover:border-border/50'
                   }`}
                 title="Options"
               >
@@ -179,7 +179,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
                   <div className="flex flex-col py-1">
                     <Link
                       href={`/workout/${workout.id}/summary`}
-                      className="flex items-center px-3 py-2.5 text-xs font-bold text-muted hover:text-text hover:bg-surface-lighter transition-colors w-full text-left"
+                      className="flex items-center px-3 py-2.5 text-xs font-bold text-muted hover:text-foreground hover:bg-surface-lighter transition-colors w-full text-left"
                     >
                       <Eye size={12} className="mr-2" />
                       View Details
@@ -190,7 +190,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
                         setShowMenu(false)
                         exportMD()
                       }}
-                      className="flex items-center px-3 py-2.5 text-xs font-bold text-muted hover:text-text hover:bg-surface-lighter transition-colors w-full text-left"
+                      className="flex items-center px-3 py-2.5 text-xs font-bold text-muted hover:text-foreground hover:bg-surface-lighter transition-colors w-full text-left"
                     >
                       <Download size={12} className="mr-2" />
                       Export
@@ -202,7 +202,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
                           setShowMenu(false)
                           onDelete(workout.id)
                         }}
-                        className="flex items-center px-3 py-2.5 text-xs font-bold text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-colors w-full text-left"
+                        className="flex items-center px-3 py-2.5 text-xs font-bold text-error hover:text-error hover:bg-error/10 transition-colors w-full text-left"
                       >
                         <Trash2 size={12} className="mr-2" />
                         Delete

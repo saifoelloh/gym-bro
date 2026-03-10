@@ -36,10 +36,10 @@ export function RPESlider({ value, onChange }: Props) {
                         {current?.emoji || '❔'}
                     </span>
                     <div className="text-center px-4">
-                        <h3 className="text-2xl font-bold text-text tracking-tight uppercase italic">
+                        <h3 className="text-2xl font-bold text-foreground tracking-tight uppercase italic">
                             {value || 'How hard?'}
                         </h3>
-                        <p className="text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 italic mt-1" style={{ color: current?.color || '#555555' }}>
+                        <p className="text-micro font-bold uppercase tracking-widest transition-colors duration-300 italic mt-1" style={{ color: current?.color || '#555555' }}>
                             {current?.label || 'Select RPE intensity'}
                         </p>
                     </div>

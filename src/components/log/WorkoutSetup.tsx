@@ -42,7 +42,7 @@ export function WorkoutSetup({ name, setName, date, setDate, logged, setLogged, 
                     <div className="flex items-end">
                         <Button
                             variant="secondary"
-                            className="w-full h-12 md:h-11 rounded-xl text-[11px] font-bold tracking-widest uppercase italic"
+                            className="w-full h-12 md:h-11 rounded-xl text-xs font-black tracking-widest uppercase italic"
                             onClick={onAddExercise}
                         >
                             <Plus size={14} className="mr-1" />
@@ -57,25 +57,25 @@ export function WorkoutSetup({ name, setName, date, setDate, logged, setLogged, 
                 {logged.length > 0 ? (
                     logged.map((l, i) => (
                         <div key={i} className="group animate-in slide-in-from-bottom-2 duration-300">
-                            <Card className="!p-3 border-border/50 hover:border-gray-700 transition-all relative overflow-hidden group-hover:shadow-xl group-hover:shadow-blue-500/5">
+                            <Card className="!p-3 border-border/50 hover:border-border transition-all relative overflow-hidden group-hover:shadow-xl group-hover:shadow-blue-500/5">
                                 <div className="flex items-center justify-between pointer-events-none">
                                     <div className="flex items-center gap-4">
                                         <div className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center">
-                                            <span className="text-[10px] font-bold text-muted font-mono">{i + 1}</span>
+                                            <span className="text-micro font-bold text-muted font-mono">{i + 1}</span>
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="text-sm font-bold text-text truncate">{l.exercise.name}</p>
+                                            <p className="text-sm font-bold text-foreground truncate">{l.exercise.name}</p>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <Badge variant={l.exercise.muscle_group} className="text-[9px] px-1.5 py-0 italic">
+                                                <Badge variant={l.exercise.muscle_group} className="text-nano px-1.5 py-0 italic">
                                                     {l.exercise.muscle_group.toUpperCase()}
                                                 </Badge>
-                                                <span className="text-[9px] text-muted uppercase font-bold tracking-tight">{l.exercise.exercise_type}</span>
+                                                <span className="text-nano text-muted uppercase font-bold tracking-tight">{l.exercise.exercise_type}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setLogged(prev => prev.filter((_, idx) => idx !== i))}
-                                        className="w-10 h-10 flex items-center justify-center rounded-xl text-muted hover:text-red-400 hover:bg-red-400/10 transition-all pointer-events-auto"
+                                        className="w-10 h-10 flex items-center justify-center rounded-xl text-muted hover:text-error hover:bg-error/10 transition-all pointer-events-auto"
                                     >
                                         <Trash2 size={18} />
                                     </button>
@@ -86,7 +86,7 @@ export function WorkoutSetup({ name, setName, date, setDate, logged, setLogged, 
                 ) : (
                     <div className="py-12 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center text-muted gap-2">
                         <Plus size={32} className="opacity-20" />
-                        <p className="text-[11px] font-bold uppercase tracking-widest italic">No exercises added yet</p>
+                        <p className="text-micro font-bold uppercase tracking-widest italic">No exercises added yet</p>
                     </div>
                 )}
             </div>
