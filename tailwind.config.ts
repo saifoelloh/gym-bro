@@ -35,6 +35,9 @@ const config: Config = {
         'nano': ['10px', '14px'],
         'micro': ['11px', '16px'],
       },
+      padding: {
+        'safe-auth': 'calc(env(safe-area-inset-bottom) + 5rem)',
+      }
     },
   },
   plugins: [],

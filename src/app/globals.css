@@ -2,20 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  ::placeholder {
+    @apply text-muted/50;
+  }
+}
+
 @layer components {
   .gym-label {
-    @apply font-black italic uppercase tracking-widest text-micro;
+    @apply font-display font-medium italic uppercase tracking-widest text-[13px] text-muted mb-1.5;
+  }
+
+  .border-brand-subtle {
+    @apply border border-accent/15;
   }
 
   .glass-panel {
-    @apply bg-bg/80 backdrop-blur-xl border border-border;
+    @apply bg-surface/40 backdrop-blur-xl border border-border/50 shadow-2xl;
   }
 
   .text-premium {
-    @apply font-black italic uppercase tracking-widest;
+    @apply font-display italic uppercase tracking-widest;
   }
 
-  .active-scale {
-    @apply active:scale-95 transition-transform;
+  .btn-primary {
+    @apply bg-accent text-bg font-display tracking-widest px-6 py-3 rounded-xl transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-accent/20 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply border border-border bg-surface/50 text-foreground font-display tracking-widest px-6 py-3 rounded-xl transition-all hover:bg-surface-hover active:scale-95;
   }
 }
