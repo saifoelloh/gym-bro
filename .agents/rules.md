@@ -68,5 +68,6 @@ This guide ensures every dynamic and interactive elements feel premium and "Vibe
 
 ## 7. Documentation Maintenance (Sync)
 - **Automatic Check**: A Git pre-commit hook (`doc-guard.sh`) is active.
+- **The "Cure"**: Use the `/sync-documentation` workflow to automatically bring resources in sync with codebase changes.
 - **AI Responsibility**: Every time I (the AI) modify `API`, `Types`, or `DB` layers, I MUST proactively ask or check if `.agents/` rules/workflows need an update.
 - **Consistency**: The `README.md` should always reflect the current state of supported exercise types and setup guides.

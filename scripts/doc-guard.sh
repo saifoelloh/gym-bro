@@ -40,6 +40,8 @@ if [ "$CODE_CHANGES_DETECTED" = true ] && [ "$DOC_CHANGES_DETECTED" = false ]; t
     echo -e " - ${CYAN}.agents/workflows/${NC} (if dev flow changed)"
     echo -e " - ${CYAN}README.md${NC} (if user-facing features changed)"
     echo -e ""
+    echo -e "${CYAN}💡 TIP: Run '/sync-documentation' to have the AI fix this automatically.${NC}"
+    echo -e ""
     echo -e "${YELLOW}Proceed with commit anyway? (y/n)${NC}"
     
     # Read user input - handles terminal interaction during commit

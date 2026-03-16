@@ -5,7 +5,6 @@ export type ExerciseType =
   | 'weighted_bodyweight'
   | 'assisted'
 
-// Doc Guard Test Comment
 export type MuscleGroup = 'Chest' | 'Back' | 'Shoulders' | 'Arms' | 'Core' | 'Legs' | 'Cardio'
 export const MUSCLE_GROUPS: MuscleGroup[] = ['Chest', 'Back', 'Shoulders', 'Arms', 'Core', 'Legs', 'Cardio']
 
@@ -142,6 +141,7 @@ export interface ActiveExercise {
   name: string
   muscle_group: MuscleGroup
   exercise_type: ExerciseType
+  is_verified?: boolean // DUMMY FIELD FOR SYNC TEST
   sets: ActiveSet[]
   notes: string
 }
