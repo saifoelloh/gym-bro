@@ -25,7 +25,7 @@ npm install
 ### 2. Setup Supabase
 
 1. Go to [supabase.com](https://supabase.com) → New Project
-2. Go to **SQL Editor** → paste contents of `supabase/schema.sql` → Run
+2. Go to **SQL Editor** → Run `supabase/schema.sql` FIRST, then apply all files in `supabase/migrations/` in order.
 3. Go to **Settings → API** → copy your **Project URL** and **anon key**
 
 ### 3. Environment Variables

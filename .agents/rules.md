@@ -9,9 +9,9 @@
 ### A. Database Layer (Supabase/PostgreSQL)
 - **Schema**: Tables and columns MUST use `snake_case`.
 - **Migration Order**: 
-    1. `supabase/schema.sql` (Base tables, RLS, Functions).
-    2. `supabase/schema_templates.sql` (Workout templates).
-    3. `supabase/schema_expand_exercises.sql` (Full exercise library).
+    - Database migrations are stored in `supabase/migrations/`. 
+    - Apply them in chronological order.
+    - Base schemas: `supabase/schema.sql`, `supabase/schema_templates.sql`, etc.
 - **RLS**: Every table MUST have Row Level Security enabled.
 - **Enums**: Check constraints (e.g., `exercise_type`) should be kept updated in SQL.
 
