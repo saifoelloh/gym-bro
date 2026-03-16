@@ -166,7 +166,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                   {/* Assist KG (assisted) */}
                   {type === 'assisted' && (
                     <div>
-                      <label className="font-mono text-micro block mb-1 uppercase tracking-tighter" style={{ color: '#4ECDC4' }}>
+                      <label className="font-mono text-micro text-assisted block mb-1 uppercase tracking-tighter">
                         ASSIST KG
                       </label>
                       <input
@@ -174,8 +174,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
                         placeholder="0"
                         value={set.weight_kg}
                         onChange={(e) => updateSet(i, 'weight_kg', e.target.value)}
-                        className="input-field py-3 text-base sm:text-sm text-center"
-                        style={{ borderColor: set.weight_kg ? '#4ECDC480' : undefined }}
+                        className="input-field py-3 text-base sm:text-sm text-center border-assisted/40 focus:border-assisted"
                         min={0}
                         step={0.5}
                       />
@@ -226,7 +225,7 @@ export default function SetLogger({ exerciseEntry, index, onChange, onRemove }: 
 
             <button
               onClick={addSet}
-              className="w-full h-12 flex items-center justify-center gap-3 border border-dashed border-border/60 hover:border-accent hover:bg-accent/5 rounded-lg font-display tracking-[0.2em] text-micro text-muted hover:text-accent transition-all"
+              className="w-full h-12 flex items-center justify-center gap-3 border border-dashed border-border/60 hover:border-accent/40 hover:bg-accent/5 rounded-lg active:scale-95 transition-all text-micro text-muted hover:text-accent font-black italic uppercase tracking-widest"
             >
               <Plus size={16} />
               ADD SET
