@@ -108,9 +108,9 @@ export default function TemplateEditor({ template, onSaved, onCancel }: Props) {
       <div className="bg-bg border-t sm:border border-border sm:rounded-2xl w-full max-w-2xl h-full sm:h-auto sm:max-h-[85vh] flex flex-col shadow-2xl overflow-hidden relative transition-all">
 
         {/* Sticky Header */}
-        <div className="sticky top-0 z-20 flex items-center justify-between p-4 sm:p-5 border-b border-border bg-bg/80 backdrop-blur-xl">
+        <div className="sticky top-0 z-20 flex items-center justify-between p-4 sm:p-5 border-b border-border glass-panel">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-foreground tracking-tight uppercase">
+            <h2 className="text-base sm:text-lg font-bold text-foreground tracking-tight uppercase text-premium">
               {template ? 'Edit Template' : 'New Template'}
             </h2>
             <p className="text-micro text-muted font-mono tracking-widest mt-0.5 uppercase">
@@ -119,7 +119,7 @@ export default function TemplateEditor({ template, onSaved, onCancel }: Props) {
           </div>
           <button
             onClick={onCancel}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-surface border border-border text-muted hover:text-foreground hover:bg-surface transition-all"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-surface border border-border text-muted hover:text-foreground active-scale transition-all"
           >
             <X size={20} />
           </button>

@@ -18,8 +18,8 @@ export function RecentWorkoutsList({ workouts }: { workouts: Workout[] }) {
         const groups = Array.from(new Set(w.workout_exercises.map(we => we.exercises.muscle_group)))
         return (
           <li key={w.id}>
-            <Link href={`/workout/${w.id}/summary`} className="block group cursor-pointer">
-              <Card className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 transition-colors cursor-pointer group-hover:border-info/50 group-hover:bg-surface/50">
+            <Link href={`/workout/${w.id}/summary`} className="block group cursor-pointer active-scale">
+              <Card className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 transition-colors cursor-pointer group-hover:border-accent/40 group-hover:bg-surface/50">
                 <div className="min-w-0 w-full sm:w-auto">
                   <p className="font-medium text-foreground truncate group-hover:text-info transition-colors">{w.name}</p>
                   <p className="text-sm text-muted">
