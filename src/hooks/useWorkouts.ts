@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '@/lib/api/client'
 import type { Workout, CreateWorkoutPayload } from '@/types'
+import { useAuth } from '@/components/providers/AuthContext'
 
 export function useWorkouts(limit = 20) {
+  const { user, loading: authLoading } = useAuth()
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -15,6 +17,14 @@ export function useWorkouts(limit = 20) {
   searchRef.current = search
 
   const load = useCallback(async (reset = false) => {
+    // Don't load if auth is still loading or if no user (unless we support Guest mode later)
+    if (authLoading) return
+    if (!user) {
+      setWorkouts([])
+      setLoading(false)
+      return
+    }
+
     if (reset) {
       setLoading(true)
       offsetRef.current = 0
@@ -38,7 +48,7 @@ export function useWorkouts(limit = 20) {
       if (reset) setLoading(false)
       else setLoadingMore(false)
     }
-  }, [limit])
+  }, [limit, user, authLoading])
 
   useEffect(() => {
     load(true)
@@ -51,15 +61,17 @@ export function useWorkouts(limit = 20) {
   }, [loading, loadingMore, hasMore, load])
 
   const create = async (payload: CreateWorkoutPayload) => {
+    if (!user) throw new Error('Must be logged in to create workouts')
     const workout = await api.workouts.create(payload)
     setWorkouts(prev => [workout, ...prev])
     return workout
   }
 
   const remove = async (id: string) => {
+    if (!user) throw new Error('Must be logged in to remove workouts')
     await api.workouts.remove(id)
     setWorkouts(prev => prev.filter(w => w.id !== id))
   }
 
-  return { workouts, loading, loadingMore, hasMore, search, setSearch, loadMore, error, refetch: () => load(true), create, remove }
+  return { workouts, loading: loading || authLoading, loadingMore, hasMore, search, setSearch, loadMore, error, refetch: () => load(true), create, remove }
 }

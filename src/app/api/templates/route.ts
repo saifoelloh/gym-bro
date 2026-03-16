@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type { CreateTemplatePayload } from '@/types'
 
 const TEMPLATE_SELECT = `
@@ -11,9 +11,14 @@ const TEMPLATE_SELECT = `
 `
 
 export async function GET() {
+    const supabase = createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const { data, error } = await supabase
         .from('workout_templates')
         .select(TEMPLATE_SELECT)
+        .eq('user_id', user.id)
         .order('updated_at', { ascending: false })
         .order('exercise_order', { referencedTable: 'template_exercises' })
 
@@ -32,12 +37,16 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+    const supabase = createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const body: CreateTemplatePayload = await req.json()
     const { name, description, exercises } = body
 
     const { data: template, error: tErr } = await supabase
         .from('workout_templates')
-        .insert({ name, description })
+        .insert({ name, description, user_id: user.id })
         .select('id')
         .single()
 
@@ -51,7 +60,8 @@ export async function POST(req: NextRequest) {
                 exercise_id: ex.exercise_id,
                 exercise_order: ex.exercise_order,
                 target_sets: ex.target_sets,
-                notes: ex.notes
+                notes: ex.notes,
+                user_id: user.id
             })))
 
         if (exErr) return NextResponse.json({ error: exErr.message }, { status: 500 })

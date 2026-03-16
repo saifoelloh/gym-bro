@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const exerciseId = searchParams.get('exerciseId')
   const range = Number(searchParams.get('range') ?? 30)
+
+  const supabase = createServerSupabaseClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const since = new Date()
   since.setDate(since.getDate() - range)
@@ -19,6 +23,7 @@ export async function GET(req: NextRequest) {
         workouts!inner ( date )
       )
     `)
+    .eq('user_id', user.id) // Secure by user_id
     .gte('workout_exercises.workouts.date', since.toISOString().split('T')[0])
 
   if (exerciseId) query = query.eq('workout_exercises.exercise_id', exerciseId)

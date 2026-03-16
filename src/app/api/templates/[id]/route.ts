@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type { CreateTemplatePayload } from '@/types'
 
 const TEMPLATE_SELECT = `
@@ -11,10 +11,15 @@ const TEMPLATE_SELECT = `
 `
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+    const supabase = createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const { data: full, error: fullErr } = await supabase
         .from('workout_templates')
         .select(TEMPLATE_SELECT)
         .eq('id', params.id)
+        .eq('user_id', user.id) // Secure access
         .single()
 
     if (fullErr) return NextResponse.json({ error: fullErr.message }, { status: 500 })
@@ -31,6 +36,10 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
 }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+    const supabase = createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const body: Partial<CreateTemplatePayload> = await req.json()
     const { name, description, exercises } = body
 
@@ -39,12 +48,17 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             .from('workout_templates')
             .update({ name, description })
             .eq('id', params.id)
+            .eq('user_id', user.id) // Secure update
         if (tErr) return NextResponse.json({ error: tErr.message }, { status: 500 })
     }
 
     if (exercises) {
         // Replace all exercises for simplicity (delete then insert)
-        await supabase.from('template_exercises').delete().eq('template_id', params.id)
+        await supabase
+            .from('template_exercises')
+            .delete()
+            .eq('template_id', params.id)
+            .eq('user_id', user.id) // Secure delete
 
         if (exercises.length > 0) {
             const { error: exErr } = await supabase
@@ -54,7 +68,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
                     exercise_id: ex.exercise_id,
                     exercise_order: ex.exercise_order,
                     target_sets: ex.target_sets,
-                    notes: ex.notes
+                    notes: ex.notes,
+                    user_id: user.id
                 })))
             if (exErr) return NextResponse.json({ error: exErr.message }, { status: 500 })
         }
@@ -64,6 +79,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         .from('workout_templates')
         .select(TEMPLATE_SELECT)
         .eq('id', params.id)
+        .eq('user_id', user.id)
         .single()
 
     if (fullErr) return NextResponse.json({ error: fullErr.message }, { status: 500 })
@@ -80,7 +96,16 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
-    const { error } = await supabase.from('workout_templates').delete().eq('id', params.id)
+    const supabase = createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    const { error } = await supabase
+        .from('workout_templates')
+        .delete()
+        .eq('id', params.id)
+        .eq('user_id', user.id) // Secure delete
+        
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return new NextResponse(null, { status: 204 })
 }
