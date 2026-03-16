@@ -54,6 +54,10 @@ This guide ensures every dynamic and interactive elements feel premium and "Vibe
     - Components: `PascalCase`.
     - Functions/Variables: `camelCase`.
     - Database/Types: `snake_case` (for entity matching).
+- **Auth Module**:
+    - **Logic Hooks**: Store in `src/hooks/auth/`. Logic MUST be encapsulated in custom hooks like `useLogin`.
+    - **Forms**: Store in `src/components/auth/`. Separate form logic from page metadata.
+    - **Pages**: `page.tsx` MUST be Server Components for metadata. Wrap client-side forms in `<Suspense>`.
 - **Git**: Follow Conventional Commits (`feat`, `fix`, `docs`, `refactor`). Use imperative mood ("Add", "Fix").
 
 ## 5. ⛔ Don'ts

@@ -57,6 +57,8 @@ npm run dev
 | `/log` | Log a new workout session |
 | `/history` | View all past sessions, export |
 | `/progress` | Charts — volume, strength trends, muscle distribution |
+| `/auth/login` | Sign in with premium Auth UI |
+| `/auth/register` | Join the club (simplified 3-field enlisting) |
 
 ---
 
@@ -75,8 +77,9 @@ Then paste the exported file content to your AI chat and ask for analysis, e.g.:
 ## 🏗 Tech Stack
 
 - **Next.js 14** (App Router)
-- **Supabase** (PostgreSQL cloud database)
+- **Supabase** (PostgreSQL + Auth)
 - **Tailwind CSS** (styling)
+- **Lucide-react** (icons)
 - **Recharts** (progress charts)
 - **date-fns** (date utilities)
 
