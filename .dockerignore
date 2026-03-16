@@ -23,5 +23,5 @@ Dockerfile
 # misc
 README.md
 .agents
-.agent
+.gemini
 brain
