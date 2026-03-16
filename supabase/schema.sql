@@ -49,6 +49,24 @@ CREATE TABLE sets (
 );
 
 -- =============================================
+-- SECURITY (RLS)
+-- =============================================
+ALTER TABLE exercises ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workouts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workout_exercises ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sets ENABLE ROW LEVEL SECURITY;
+
+-- Policies for public data (Exercises)
+CREATE POLICY "Allow public read access to exercises" ON exercises FOR SELECT USING (true);
+
+-- Policies for user data (Workouts & Sets)
+-- Note: As of now, these are open for all users. 
+-- In a multi-user app, these would use (auth.uid() = user_id)
+CREATE POLICY "Allow all access to workouts" ON workouts FOR ALL USING (true);
+CREATE POLICY "Allow all access to workout_exercises" ON workout_exercises FOR ALL USING (true);
+CREATE POLICY "Allow all access to sets" ON sets FOR ALL USING (true);
+
+-- =============================================
 -- INDEXES
 -- =============================================
 CREATE INDEX idx_workouts_date ON workouts(date DESC);

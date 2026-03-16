@@ -22,7 +22,18 @@ CREATE TABLE template_exercises (
 
 CREATE INDEX idx_template_exercises_template ON template_exercises(template_id);
 
--- Auto-update updated_at on template changes
+-- =============================================
+-- SECURITY (RLS)
+-- =============================================
+ALTER TABLE workout_templates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE template_exercises ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all access to workout_templates" ON workout_templates FOR ALL USING (true);
+CREATE POLICY "Allow all access to template_exercises" ON template_exercises FOR ALL USING (true);
+
+-- =============================================
+-- FUNCTIONS & TRIGGERS
+-- =============================================
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
