@@ -23,6 +23,8 @@ const config: Config = {
         error: "#EF4444",
         success: "#22C55E",
         info: "#3B82F6",
+        assisted: "#4ECDC4",
+        "assisted-subtle": "rgba(78, 205, 196, 0.1)",
       },
       fontFamily: {
         display: ["var(--font-oswald)", "sans-serif"],

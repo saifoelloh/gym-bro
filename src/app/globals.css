@@ -6,4 +6,16 @@
   .gym-label {
     @apply font-black italic uppercase tracking-widest text-micro;
   }
+
+  .glass-panel {
+    @apply bg-bg/80 backdrop-blur-xl border border-border;
+  }
+
+  .text-premium {
+    @apply font-black italic uppercase tracking-widest;
+  }
+
+  .active-scale {
+    @apply active:scale-95 transition-transform;
+  }
 }
