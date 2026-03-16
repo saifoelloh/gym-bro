@@ -5,6 +5,7 @@ export type ExerciseType =
   | 'weighted_bodyweight'
   | 'assisted'
 
+// Doc Guard Test Comment
 export type MuscleGroup = 'Chest' | 'Back' | 'Shoulders' | 'Arms' | 'Core' | 'Legs' | 'Cardio'
 export const MUSCLE_GROUPS: MuscleGroup[] = ['Chest', 'Back', 'Shoulders', 'Arms', 'Core', 'Legs', 'Cardio']
 
