@@ -51,20 +51,24 @@ CREATE TABLE sets (
 -- =============================================
 -- SECURITY (RLS)
 -- =============================================
+
+-- Add user_id column to tables
+ALTER TABLE workouts ADD COLUMN user_id UUID REFERENCES auth.users(id) DEFAULT auth.uid();
+ALTER TABLE workout_exercises ADD COLUMN user_id UUID REFERENCES auth.users(id) DEFAULT auth.uid();
+ALTER TABLE sets ADD COLUMN user_id UUID REFERENCES auth.users(id) DEFAULT auth.uid();
+
 ALTER TABLE exercises ENABLE ROW LEVEL SECURITY;
 ALTER TABLE workouts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE workout_exercises ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sets ENABLE ROW LEVEL SECURITY;
 
 -- Policies for public data (Exercises)
-CREATE POLICY "Allow public read access to exercises" ON exercises FOR SELECT USING (true);
+CREATE POLICY "Exercises are viewable by everyone" ON exercises FOR SELECT USING (true);
 
 -- Policies for user data (Workouts & Sets)
--- Note: As of now, these are open for all users. 
--- In a multi-user app, these would use (auth.uid() = user_id)
-CREATE POLICY "Allow all access to workouts" ON workouts FOR ALL USING (true);
-CREATE POLICY "Allow all access to workout_exercises" ON workout_exercises FOR ALL USING (true);
-CREATE POLICY "Allow all access to sets" ON sets FOR ALL USING (true);
+CREATE POLICY "Users can manage their own workouts" ON workouts FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can manage their own workout_exercises" ON workout_exercises FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can manage their own sets" ON sets FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 
 -- =============================================
 -- INDEXES
