@@ -5,7 +5,7 @@ import { Play, Pencil, Copy, Trash2, ChevronDown, ChevronUp } from 'lucide-react
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import type { WorkoutTemplate, MuscleGroup } from '@/types'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface Props {
     template: WorkoutTemplate
@@ -14,7 +14,7 @@ interface Props {
     onDelete: (id: string) => void
 }
 
-export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Props) {
+export const TemplateCard = React.memo(function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Props) {
     const [expanded, setExpanded] = useState(false)
 
     const muscleGroups = Array.from(new Set(
@@ -121,4 +121,4 @@ export function TemplateCard({ template: t, onEdit, onDuplicate, onDelete }: Pro
             </div>
         </Card>
     )
-}
+})

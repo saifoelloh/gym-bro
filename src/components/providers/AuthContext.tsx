@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Session, User } from '@supabase/supabase-js'
+import { Session, User, AuthError } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
 interface AuthContextType {
@@ -10,8 +10,8 @@ interface AuthContextType {
     session: Session | null
     loading: boolean
     nickname: string | null
-    signIn: (email: string, password: string) => Promise<{ error: any }>
-    signUp: (email: string, password: string, nickname: string) => Promise<{ error: any }>
+    signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
+    signUp: (email: string, password: string, nickname: string) => Promise<{ error: AuthError | null }>
     signOut: () => Promise<void>
 }
 
@@ -41,7 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Auth event:', event, session?.user?.email)
             setSession(session)
             setUser(session?.user ?? null)
             
@@ -64,17 +63,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [])
 
     const signIn = async (email: string, password: string) => {
-        console.log('Attempting signIn for:', email)
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password,
         })
-        if (error) console.error('SignIn error:', error)
+        if (error && process.env.NODE_ENV !== 'production') {
+            console.error('SignIn error:', error)
+        }
         return { error }
     }
 
     const signUp = async (email: string, password: string, nickname: string) => {
-        console.log('Attempting signUp for:', email, nickname)
         const { error } = await supabase.auth.signUp({
             email,
             password,
@@ -84,7 +83,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 }
             }
         })
-        if (error) console.error('SignUp error:', error)
+        if (error && process.env.NODE_ENV !== 'production') {
+            console.error('SignUp error:', error)
+        }
         return { error }
     }
 

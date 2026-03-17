@@ -2,9 +2,13 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useExercises } from '@/hooks/useExercises'
 import { useWorkouts } from '@/hooks/useWorkouts'
-import { WorkoutForm } from '@/components/log/WorkoutForm'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
+
+const WorkoutForm = dynamic(() => import('@/components/log/WorkoutForm').then(m => m.WorkoutForm), {
+  loading: () => <LoadingSpinner label="Preparing form..." />
+})
 
 function LogContent() {
   const router = useRouter()

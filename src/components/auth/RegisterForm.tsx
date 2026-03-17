@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRegister } from '@/hooks/auth/useRegister'
+import { useAuth } from '@/components/providers/AuthContext'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { AuthCard } from './AuthCard'
 import { AuthInput } from './AuthInput'
 import { PasswordInput } from './PasswordInput'
@@ -14,7 +17,14 @@ export function RegisterForm() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [validationError, setValidationError] = useState<string | null>(null)
     const { handleSubmit, loading, error } = useRegister()
+    const { user, loading: authLoading } = useAuth()
+    const router = useRouter()
 
+    useEffect(() => {
+        if (!authLoading && user) {
+            router.replace('/')
+        }
+    }, [user, authLoading, router])
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         setValidationError(null)

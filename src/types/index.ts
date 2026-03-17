@@ -141,7 +141,6 @@ export interface ActiveExercise {
   name: string
   muscle_group: MuscleGroup
   exercise_type: ExerciseType
-  is_verified?: boolean // DUMMY FIELD FOR SYNC TEST
   sets: ActiveSet[]
   notes: string
 }

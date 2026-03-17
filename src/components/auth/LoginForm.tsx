@@ -4,6 +4,9 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useLogin } from '@/hooks/auth/useLogin'
+import { useAuth } from '@/components/providers/AuthContext'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { AuthCard } from './AuthCard'
 import { AuthInput } from './AuthInput'
 import { PasswordInput } from './PasswordInput'
@@ -13,9 +16,16 @@ export function LoginForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const searchParams = useSearchParams()
+    const router = useRouter()
     const registered = searchParams.get('registered')
     const { handleSubmit, loading, error } = useLogin()
+    const { user, loading: authLoading } = useAuth()
 
+    useEffect(() => {
+        if (!authLoading && user) {
+            router.replace('/')
+        }
+    }, [user, authLoading, router])
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         handleSubmit(email, password)

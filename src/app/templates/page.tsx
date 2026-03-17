@@ -2,18 +2,19 @@
 import { useState } from 'react'
 import { useTemplates } from '@/hooks/useTemplates'
 import { TemplateList } from '@/components/templates/TemplateList'
-import TemplateEditor from '@/components/TemplateEditor'
+import TemplateEditor from '@/components/templates/TemplateEditor'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { Plus, AlertCircle } from 'lucide-react'
+import { WorkoutTemplate } from '@/types'
 
 export default function TemplatesPage() {
   const { templates, loading, error, remove, duplicate, refetch } = useTemplates()
   const [showEditor, setShowEditor] = useState(false)
-  const [editTarget, setEditTarget] = useState<any>(null)
+  const [editTarget, setEditTarget] = useState<WorkoutTemplate | null>(null)
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
 
   const openCreate = () => { setEditTarget(null); setShowEditor(true); }
-  const openEdit = (t: any) => { setEditTarget(t); setShowEditor(true); }
+  const openEdit = (t: WorkoutTemplate) => { setEditTarget(t); setShowEditor(true); }
 
   const processDelete = async () => {
     if (!deleteConfirmId) return
@@ -33,7 +34,7 @@ export default function TemplatesPage() {
             {templates.length} saved program{templates.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <button onClick={openCreate} className="w-full sm:w-auto bg-info hover:bg-info text-foreground flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-bold transition-colors">
+        <button onClick={openCreate} className="w-full sm:w-auto bg-info hover:bg-info/80 text-foreground flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-bold transition-colors">
           <Plus size={16} />
           NEW TEMPLATE
         </button>

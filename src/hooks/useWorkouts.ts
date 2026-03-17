@@ -11,10 +11,16 @@ export function useWorkouts(limit = 20) {
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
   const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
   const offsetRef = useRef(0)
   const searchRef = useRef(search)
   searchRef.current = search
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(timer)
+  }, [search])
 
   const load = useCallback(async (reset = false) => {
     // Don't load if auth is still loading or if no user (unless we support Guest mode later)
@@ -34,10 +40,10 @@ export function useWorkouts(limit = 20) {
     setError(null)
 
     try {
-      const currentSearch = searchRef.current
+      const currentSearch = debouncedSearch
       const data = await api.workouts.list(limit, offsetRef.current, currentSearch)
 
-      if (currentSearch !== searchRef.current) return
+      if (currentSearch !== debouncedSearch) return
 
       setWorkouts(prev => reset ? data : [...prev, ...data])
       setHasMore(data.length === limit)
@@ -48,11 +54,11 @@ export function useWorkouts(limit = 20) {
       if (reset) setLoading(false)
       else setLoadingMore(false)
     }
-  }, [limit, user, authLoading])
+  }, [limit, user, authLoading, debouncedSearch])
 
   useEffect(() => {
     load(true)
-  }, [search, load])
+  }, [debouncedSearch, load])
 
   const loadMore = useCallback(() => {
     if (!loading && !loadingMore && hasMore) {

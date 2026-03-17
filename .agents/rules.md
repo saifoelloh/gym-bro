@@ -26,13 +26,13 @@
 - **Types**: Always use types from `src/types/index.ts`. Propagate these types from API responses to hooks.
 
 ### D. UI Layer (`src/components`)
-- **Visual Source of Truth**: Refer to [.agents/design-system.md](file:///Users/ekuid/Documents/saipul/gym-tracker/.agents/design-system.md) for all color tokens, typography, and premium aesthetic guidelines.
+- **Visual Source of Truth**: Refer to [.agents/design-system.md](./.agents/design-system.md) for all color tokens, typography, and premium aesthetic guidelines.
 - **Components**: Use `src/components/ui/` for primitives. Always check for existing components before creating new ones.
 - **Icons**: Use `lucide-react`.
 
 # Premium UI Standards
 
-This guide ensures every dynamic and interactive elements feel premium and "Vibe-Check" approved. Refer to the [Design System](file:///Users/ekuid/Documents/saipul/gym-tracker/.agents/design-system.md) for the full palette and typography rules.
+This guide ensures every dynamic and interactive elements feel premium and "Vibe-Check" approved. Refer to the [Design System](./.agents/design-system.md) for the full palette and typography rules.
 
 ## 1. Visual Alignment
 - **Checklist**:
