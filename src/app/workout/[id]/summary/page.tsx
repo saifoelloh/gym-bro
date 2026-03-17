@@ -1,72 +1,48 @@
-'use client'
+import { Metadata } from 'next'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { WORKOUT_SELECT } from '@/lib/queries'
+import WorkoutSummaryClient from './WorkoutSummaryClient'
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { api } from '@/lib/api/client'
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import { WorkoutSummaryDisplay } from '@/components/log/WorkoutSummaryDisplay'
-import type { Workout } from '@/types'
-import { ArrowLeft } from 'lucide-react'
+interface Props {
+    params: { id: string }
+}
 
-export default function WorkoutSummaryPage() {
-    const params = useParams()
-    const router = useRouter()
-    const id = params?.id as string
+import { Workout } from '@/types'
 
-    const [workout, setWorkout] = useState<Workout | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+async function getWorkout(id: string) {
+    const supabase = createServerSupabaseClient()
+    const { data, error } = await supabase
+        .from('workouts')
+        .select(WORKOUT_SELECT)
+        .eq('id', id)
+        .single()
 
-    useEffect(() => {
-        if (!id) return
+    if (error || !data) return { workout: null, error: error?.message || 'Workout not found' }
 
-        let mounted = true
-        setLoading(true)
-
-        api.workouts.get(id)
-            .then((data) => {
-                if (mounted) setWorkout(data)
-            })
-            .catch((err) => {
-                if (mounted) setError(err.message || 'Failed to load workout')
-            })
-            .finally(() => {
-                if (mounted) setLoading(false)
-            })
-
-        return () => { mounted = false }
-    }, [id])
-
-    if (loading) {
-        return (
-            <div className="flex-1 flex flex-col justify-center items-center h-screen">
-                <LoadingSpinner label="Loading summary..." />
-            </div>
-        )
+    // Map the Supabase result to match the Workout interface
+    const formattedWorkout: Workout = {
+        ...data,
+        workout_exercises: (data.workout_exercises || []).map((we: any) => ({
+            ...we,
+            exercises: Array.isArray(we.exercises) ? we.exercises[0] : we.exercises
+        }))
     }
 
-    if (error || !workout) {
-        return (
-            <div className="flex-1 flex flex-col justify-center items-center h-screen p-4 text-center">
-                <div className="w-16 h-16 rounded-full bg-error/20 flex items-center justify-center mb-4">
-                    <ArrowLeft size={32} className="text-error" />
-                </div>
-                <h2 className="text-xl font-bold text-foreground mb-2">Oops! Something went wrong</h2>
-                <p className="text-muted mb-6">{error || 'Workout not found'}</p>
-                <button
-                    onClick={() => router.push('/')}
-                    className="h-12 px-6 rounded-xl bg-surface border border-border text-foreground font-black uppercase italic tracking-widest text-micro hover:bg-surface-hover"
-                >
-                    Return to Home
-                </button>
-            </div>
-        )
-    }
+    return { workout: formattedWorkout, error: null }
+}
 
-    return (
-        <main className="min-h-screen pt-12 px-4 relative overflow-hidden">
-            <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-gradient-to-br from-green-500/5 via-transparent to-transparent -z-10 pointer-events-none" />
-            <WorkoutSummaryDisplay workout={workout} />
-        </main>
-    )
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { workout } = await getWorkout(params.id)
+    if (!workout) return { title: 'Workout Not Found | Gym Bro' }
+
+    return {
+        title: `${workout.name} Summary | Gym Bro`,
+        description: `Check out my workout summary for ${workout.name}. I did ${workout.workout_exercises?.length || 0} exercises today!`,
+    }
+}
+
+export default async function WorkoutSummaryPage({ params }: Props) {
+    const { workout, error } = await getWorkout(params.id)
+
+    return <WorkoutSummaryClient workout={workout} error={error} />
 }
