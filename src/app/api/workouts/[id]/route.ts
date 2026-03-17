@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
-const WORKOUT_SELECT = `
-  id, name, date, duration_minutes, notes, rpe, created_at,
-  workout_exercises (
-    id, exercise_id, exercise_order, notes,
-    sets ( id, set_number, reps, weight_kg, duration_seconds, rest_seconds, notes ),
-    exercises ( id, name, muscle_group, sub_category, exercise_type, is_custom )
-  )
-`
+import { WORKOUT_SELECT } from '@/lib/queries'
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   const supabase = createServerSupabaseClient()
@@ -23,7 +16,17 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 404 })
-  return NextResponse.json(data)
+
+  // Format data
+  const formattedWorkout = {
+    ...data,
+    workout_exercises: (data.workout_exercises || []).map((we: any) => ({
+      ...we,
+      exercises: Array.isArray(we.exercises) ? we.exercises[0] : we.exercises
+    }))
+  }
+
+  return NextResponse.json(formattedWorkout)
 }
 
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {

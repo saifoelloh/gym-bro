@@ -2,14 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type { CreateWorkoutPayload } from '@/types'
 
-const WORKOUT_SELECT = `
-  id, name, date, duration_minutes, notes, rpe, created_at,
-  workout_exercises (
-    id, exercise_id, exercise_order, notes,
-    sets ( id, set_number, reps, weight_kg, duration_seconds, rest_seconds, notes ),
-    exercises ( id, name, muscle_group, sub_category, exercise_type, is_custom )
-  )
-`
+import { WORKOUT_SELECT } from '@/lib/queries'
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url)
@@ -40,7 +33,17 @@ export async function GET(req: NextRequest) {
   const { data, error } = await query
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  
+  // Format data to match Workout interface (Supabase returns exercises as an array)
+  const formattedData = (data || []).map((w: any) => ({
+    ...w,
+    workout_exercises: (w.workout_exercises || []).map((we: any) => ({
+      ...we,
+      exercises: Array.isArray(we.exercises) ? we.exercises[0] : we.exercises
+    }))
+  }))
+
+  return NextResponse.json(formattedData)
 }
 
 export async function POST(req: NextRequest) {
@@ -83,5 +86,15 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (fullErr) return NextResponse.json({ error: fullErr.message }, { status: 500 })
-  return NextResponse.json(full, { status: 201 })
+
+  // Format data
+  const formattedFull = {
+    ...full,
+    workout_exercises: (full.workout_exercises || []).map((we: any) => ({
+      ...we,
+      exercises: Array.isArray(we.exercises) ? we.exercises[0] : we.exercises
+    }))
+  }
+
+  return NextResponse.json(formattedFull, { status: 201 })
 }
