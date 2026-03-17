@@ -113,7 +113,7 @@ export default function Navbar() {
             );
           })}
         </div>
-        <div className="h-safe-bottom" />
+        <div style={{ height: 'env(safe-area-inset-bottom)' }} />
       </nav>
     </>
   );

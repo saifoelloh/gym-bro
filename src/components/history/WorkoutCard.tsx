@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -11,7 +11,7 @@ import type { Workout, MuscleGroup } from '@/types'
 
 interface Props { workout: Workout; onDelete?: (id: string) => void }
 
-export function WorkoutCard({ workout, onDelete }: Props) {
+export const WorkoutCard = React.memo(function WorkoutCard({ workout, onDelete }: Props) {
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -164,7 +164,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
                   e.stopPropagation()
                   setShowMenu(!showMenu)
                 }}
-                className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors border ${showMenu ? 'bg-surface border-border text-foreground' : 'text-muted hover:text-foreground hover:bg-surface border-transparent hover:border-border/50'
+                className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors border p-3 -m-3 ${showMenu ? 'bg-surface border-border text-foreground' : 'text-muted hover:text-foreground hover:bg-surface border-transparent hover:border-border/50'
                   }`}
                 title="Options"
               >
@@ -217,4 +217,4 @@ export function WorkoutCard({ workout, onDelete }: Props) {
       </Card>
     </div>
   )
-}
+})
