@@ -1,24 +1,22 @@
-import { useState, useEffect } from 'react'
-import { api } from '@/lib/api/client'
+import useSWR from 'swr'
 import type { Exercise } from '@/types'
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Failed to fetch exercises')
+  return res.json()
+}
+
 export function useExercises() {
-  const [exercises, setExercises] = useState<Exercise[]>([])
-  const [loading, setLoading]     = useState(true)
-  const [error, setError]         = useState<string | null>(null)
+  const { data, error, isLoading } = useSWR<Exercise[]>('/api/exercises', fetcher)
 
-  useEffect(() => {
-    api.exercises.list()
-      .then(setExercises)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false))
-  }, [])
-
+  const exercises = data || []
+  
   const byMuscleGroup = exercises.reduce<Record<string, Exercise[]>>((acc, ex) => {
     if (!acc[ex.muscle_group]) acc[ex.muscle_group] = []
     acc[ex.muscle_group].push(ex)
     return acc
   }, {})
 
-  return { exercises, byMuscleGroup, loading, error }
+  return { exercises, byMuscleGroup, loading: isLoading, error: error?.message }
 }

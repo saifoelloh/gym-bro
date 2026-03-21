@@ -1,62 +1,61 @@
-import { useState, useEffect, useCallback } from 'react'
+import useSWR from 'swr'
 import { api } from '@/lib/api/client'
 import type { WorkoutTemplate, CreateTemplatePayload } from '@/types'
 import { useAuth } from '@/components/providers/AuthContext'
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Failed to fetch templates')
+  return res.json()
+}
+
 export function useTemplates() {
     const { user, loading: authLoading } = useAuth()
-    const [templates, setTemplates] = useState<WorkoutTemplate[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    
+    const getKey = () => {
+        if (authLoading || !user) return null
+        return '/api/templates'
+    }
 
-    const load = useCallback(async () => {
-        if (authLoading) return
-        if (!user) {
-            setTemplates([])
-            setLoading(false)
-            return
-        }
+    const { data, error, isLoading, mutate } = useSWR<WorkoutTemplate[]>(getKey, fetcher)
 
-        setLoading(true)
-        setError(null)
-        try {
-            const data = await api.templates.list()
-            setTemplates(data)
-        } catch (e: any) {
-            setError(e.message)
-        } finally {
-            setLoading(false)
-        }
-    }, [user, authLoading])
-
-    useEffect(() => { load() }, [load])
+    const templates = data || []
 
     const create = async (payload: CreateTemplatePayload) => {
         if (!user) throw new Error('Must be logged in to create templates')
         const template = await api.templates.create(payload)
-        setTemplates(prev => [template, ...prev])
+        mutate()
         return template
     }
 
     const update = async (id: string, payload: Partial<CreateTemplatePayload>) => {
         if (!user) throw new Error('Must be logged in to update templates')
         const template = await api.templates.update(id, payload)
-        setTemplates(prev => prev.map(t => t.id === id ? template : t))
+        mutate()
         return template
     }
 
     const remove = async (id: string) => {
         if (!user) throw new Error('Must be logged in to remove templates')
         await api.templates.remove(id)
-        setTemplates(prev => prev.filter(t => t.id !== id))
+        mutate()
     }
 
     const duplicate = async (id: string) => {
         if (!user) throw new Error('Must be logged in to duplicate templates')
         const template = await api.templates.duplicate(id)
-        setTemplates(prev => [template, ...prev])
+        mutate()
         return template
     }
 
-    return { templates, loading: loading || authLoading, error, refetch: load, create, update, remove, duplicate }
+    return { 
+      templates, 
+      loading: authLoading || isLoading, 
+      error: error?.message, 
+      refetch: mutate, 
+      create, 
+      update, 
+      remove, 
+      duplicate 
+    }
 }

@@ -1,28 +1,29 @@
-import { useState, useEffect } from 'react'
-import { api } from '@/lib/api/client'
+import useSWR from 'swr'
 import type { ProgressPoint } from '@/types'
 import { useAuth } from '@/components/providers/AuthContext'
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Failed to fetch progress')
+  return res.json()
+}
+
 export function useProgress(exerciseId?: string, range?: number) {
   const { user, loading: authLoading } = useAuth()
-  const [data, setData]       = useState<ProgressPoint[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState<string | null>(null)
+  
+  const getKey = () => {
+    if (authLoading || !user) return null
+    const params = new URLSearchParams()
+    if (exerciseId) params.append('exerciseId', exerciseId)
+    if (range) params.append('range', range.toString())
+    return `/api/progress?${params.toString()}`
+  }
 
-  useEffect(() => {
-    if (authLoading) return
-    if (!user) {
-      setData([])
-      setLoading(false)
-      return
-    }
+  const { data, error, isLoading } = useSWR<ProgressPoint[]>(getKey, fetcher)
 
-    setLoading(true)
-    api.progress.get({ exerciseId, range })
-      .then(setData)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false))
-  }, [exerciseId, range, user, authLoading])
-
-  return { data, loading: loading || authLoading, error }
+  return { 
+    data: data || [], 
+    loading: authLoading || isLoading, 
+    error: error?.message 
+  }
 }

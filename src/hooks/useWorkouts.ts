@@ -1,83 +1,75 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import useSWRInfinite from 'swr/infinite'
 import { api } from '@/lib/api/client'
 import type { Workout, CreateWorkoutPayload } from '@/types'
 import { useAuth } from '@/components/providers/AuthContext'
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Failed to fetch workouts')
+  return res.json()
+}
+
 export function useWorkouts(limit = 20) {
   const { user, loading: authLoading } = useAuth()
-  const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [hasMore, setHasMore] = useState(true)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-
-  const offsetRef = useRef(0)
-  const searchRef = useRef(search)
-  searchRef.current = search
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300)
     return () => clearTimeout(timer)
   }, [search])
 
-  const load = useCallback(async (reset = false) => {
-    // Don't load if auth is still loading or if no user (unless we support Guest mode later)
-    if (authLoading) return
-    if (!user) {
-      setWorkouts([])
-      setLoading(false)
-      return
-    }
+  const getKey = (pageIndex: number, previousPageData: Workout[] | null) => {
+    if (authLoading || !user) return null // loading or logged out
+    if (previousPageData && !previousPageData.length) return null // reached the end
+    // Use the route directly for SWR fetcher mapping
+    return `/api/workouts?limit=${limit}&offset=${pageIndex * limit}&search=${encodeURIComponent(debouncedSearch)}`
+  }
 
-    if (reset) {
-      setLoading(true)
-      offsetRef.current = 0
-    } else {
-      setLoadingMore(true)
-    }
-    setError(null)
+  const { data, error, size, setSize, mutate } = useSWRInfinite<Workout[]>(getKey, fetcher)
 
-    try {
-      const currentSearch = debouncedSearch
-      const data = await api.workouts.list(limit, offsetRef.current, currentSearch)
+  const workouts = data ? data.flat() : []
+  const loading = authLoading || (user && !data && !error)
+  const loadingMore = size > 0 && data && typeof data[size - 1] === 'undefined'
+  const hasMore = data?.[data.length - 1]?.length === limit 
 
-      if (currentSearch !== debouncedSearch) return
-
-      setWorkouts(prev => reset ? data : [...prev, ...data])
-      setHasMore(data.length === limit)
-      offsetRef.current += data.length
-    } catch (e: any) {
-      setError(e.message)
-    } finally {
-      if (reset) setLoading(false)
-      else setLoadingMore(false)
-    }
-  }, [limit, user, authLoading, debouncedSearch])
-
-  useEffect(() => {
-    load(true)
-  }, [debouncedSearch, load])
-
-  const loadMore = useCallback(() => {
-    if (!loading && !loadingMore && hasMore) {
-      load(false)
-    }
-  }, [loading, loadingMore, hasMore, load])
+  const loadMore = () => {
+    if (!loadingMore && hasMore) setSize(size + 1)
+  }
 
   const create = async (payload: CreateWorkoutPayload) => {
     if (!user) throw new Error('Must be logged in to create workouts')
     const workout = await api.workouts.create(payload)
-    setWorkouts(prev => [workout, ...prev])
+    mutate() 
+    return workout
+  }
+
+  const update = async (id: string, payload: Partial<CreateWorkoutPayload>) => {
+    if (!user) throw new Error('Must be logged in to update workouts')
+    const workout = await api.workouts.update(id, payload)
+    mutate()
     return workout
   }
 
   const remove = async (id: string) => {
     if (!user) throw new Error('Must be logged in to remove workouts')
     await api.workouts.remove(id)
-    setWorkouts(prev => prev.filter(w => w.id !== id))
+    mutate()
   }
 
-  return { workouts, loading: loading || authLoading, loadingMore, hasMore, search, setSearch, loadMore, error, refetch: () => load(true), create, remove }
+  return { 
+    workouts, 
+    loading: !!loading, 
+    loadingMore: !!loadingMore, 
+    hasMore, 
+    search, 
+    setSearch, 
+    loadMore, 
+    error: error?.message, 
+    refetch: mutate, 
+    create, 
+    update,
+    remove 
+  }
 }
