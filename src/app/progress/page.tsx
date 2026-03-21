@@ -16,7 +16,7 @@ export default function ProgressPage() {
   const { exercises } = useExercises()
   const { data, loading, error } = useProgress(exerciseId, range)
   return (
-    <main className="max-w-5xl mx-auto p-4 lg:p-8 space-y-6">
+    <main className="max-w-5xl mx-auto px-4 py-4 lg:py-8 space-y-6">
       <h1 className="text-2xl font-bold text-foreground">Progress</h1>
       <Card className="flex flex-col md:flex-row gap-5 items-stretch md:items-center p-5">
         <div className="flex-1">

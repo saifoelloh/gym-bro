@@ -71,7 +71,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2 bg-surface-hover/50 px-3 py-1.5 rounded-full border border-border/50">
                     <UserIcon size={14} className="text-accent" />
-                    <span className="text-[10px] font-display font-bold tracking-widest text-foreground">@{nickname?.toUpperCase()}</span>
+                    <span className="text-[10px] font-display font-bold tracking-widest text-foreground">@{nickname?.toUpperCase() || user?.email?.split('@')[0]?.toUpperCase() || 'USER'}</span>
                   </div>
                   <button 
                     onClick={() => signOut()}

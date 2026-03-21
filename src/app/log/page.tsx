@@ -21,7 +21,7 @@ function LogContent() {
   if (error) return <p className="text-error p-4">{error}</p>
 
   return (
-    <main className="max-w-5xl mx-auto p-4 lg:p-8 space-y-4">
+    <main className="max-w-5xl mx-auto px-4 py-4 lg:py-8 space-y-4">
       <h1 className="text-2xl font-bold text-foreground">Log Workout</h1>
       <WorkoutForm
         exercises={exercises}

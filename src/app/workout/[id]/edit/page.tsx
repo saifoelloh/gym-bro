@@ -25,7 +25,7 @@ export default function EditWorkoutPage({ params }: { params: { id: string } }) 
   if (!workout) return <p className="text-error p-4">Workout not found</p>
 
   return (
-    <main className="max-w-5xl mx-auto p-4 lg:p-8 space-y-4">
+    <main className="max-w-5xl mx-auto px-4 py-4 lg:py-8 space-y-4">
       <h1 className="text-2xl font-bold text-foreground">Edit Workout</h1>
       <WorkoutForm
         exercises={exercises}

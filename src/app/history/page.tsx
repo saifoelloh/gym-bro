@@ -27,7 +27,7 @@ export default function HistoryPage() {
   if (error) return <p className="text-error p-4">{error}</p>
 
   return (
-    <main className="max-w-5xl mx-auto p-4 lg:p-8 space-y-6">
+    <main className="max-w-5xl mx-auto px-4 py-4 lg:py-8 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-4">
         <div className="w-full md:w-auto">
           <h1 className="text-3xl font-black italic uppercase tracking-widest text-foreground">History</h1>
