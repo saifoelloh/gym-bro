@@ -26,6 +26,8 @@ export const api = {
     get: (id: string) => fetcher<Workout>(`/workouts/${id}`),
     create: (body: CreateWorkoutPayload) =>
       fetcher<Workout>('/workouts', { method: 'POST', body: JSON.stringify(body) }),
+    update: (id: string, body: Partial<CreateWorkoutPayload>) =>
+      fetcher<Workout>(`/workouts/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
     remove: (id: string) =>
       fetcher<void>(`/workouts/${id}`, { method: 'DELETE' }),
   },

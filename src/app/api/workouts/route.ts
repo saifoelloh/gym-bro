@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type { CreateWorkoutPayload } from '@/types'
+import { CreateWorkoutSchema } from '@/lib/schemas'
 
 import { WORKOUT_SELECT } from '@/lib/queries'
 
@@ -51,7 +52,14 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const body: CreateWorkoutPayload = await req.json()
+  let body: CreateWorkoutPayload
+  try {
+    const rawBody = await req.json()
+    body = CreateWorkoutSchema.parse(rawBody)
+  } catch (e: any) {
+    return NextResponse.json({ error: e.errors || 'Invalid payload' }, { status: 400 })
+  }
+  
   const { name, date, notes, rpe, duration_minutes, exercises } = body
 
   // Note: user_id will be automatically set by DB DEFAULT auth.uid()
@@ -63,20 +71,37 @@ export async function POST(req: NextRequest) {
 
   if (workoutErr) return NextResponse.json({ error: workoutErr.message }, { status: 500 })
 
-  for (const ex of exercises) {
-    const { data: we, error: weErr } = await supabase
+  if (exercises.length > 0) {
+    const wePayloads = exercises.map(ex => ({
+      workout_id: workout.id,
+      exercise_id: ex.exerciseId,
+      exercise_order: ex.exerciseOrder,
+      notes: ex.notes,
+      user_id: user.id
+    }))
+
+    const { data: wes, error: weErr } = await supabase
       .from('workout_exercises')
-      .insert({ workout_id: workout.id, exercise_id: ex.exerciseId, exercise_order: ex.exerciseOrder, notes: ex.notes, user_id: user.id })
+      .insert(wePayloads)
       .select('id')
-      .single()
 
     if (weErr) return NextResponse.json({ error: weErr.message }, { status: 500 })
 
-    const { error: setsErr } = await supabase
-      .from('sets')
-      .insert(ex.sets.map(s => ({ ...s, workout_exercise_id: we.id, user_id: user.id })))
+    const setsPayload = wes.flatMap((we, i) =>
+      exercises[i].sets.map(s => ({
+        ...s,
+        workout_exercise_id: we.id,
+        user_id: user.id
+      }))
+    )
 
-    if (setsErr) return NextResponse.json({ error: setsErr.message }, { status: 500 })
+    if (setsPayload.length > 0) {
+      const { error: setsErr } = await supabase
+        .from('sets')
+        .insert(setsPayload)
+
+      if (setsErr) return NextResponse.json({ error: setsErr.message }, { status: 500 })
+    }
   }
 
   const { data: full, error: fullErr } = await supabase

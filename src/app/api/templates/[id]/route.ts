@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type { CreateTemplatePayload } from '@/types'
+import { UpdateTemplateSchema } from '@/lib/schemas'
 
 const TEMPLATE_SELECT = `
   id, name, description, created_at, updated_at,
@@ -40,7 +41,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const body: Partial<CreateTemplatePayload> = await req.json()
+    let body: Partial<CreateTemplatePayload>
+    try {
+        const rawBody = await req.json()
+        body = UpdateTemplateSchema.parse(rawBody)
+    } catch (e: any) {
+        return NextResponse.json({ error: e.errors || 'Invalid payload' }, { status: 400 })
+    }
     const { name, description, exercises } = body
 
     if (name || description !== undefined) {
