@@ -77,8 +77,11 @@ Then paste the exported file content to your AI chat and ask for analysis, e.g.:
 ## 🏗 Tech Stack
 
 - **Next.js 14** (App Router)
-- **Supabase** (PostgreSQL + Auth)
+- **Supabase** (PostgreSQL + `@supabase/ssr` Auth)
 - **Tailwind CSS** (styling)
+- **SWR** (Data fetching & caching)
+- **Zod** (API Schema validation)
+- **Vitest & RTL** (Unit testing)
 - **Lucide-react** (icons)
 - **Recharts** (progress charts)
 - **date-fns** (date utilities)

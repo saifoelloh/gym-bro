@@ -17,12 +17,13 @@
 
 ### B. API Layer (Next.js API Routes)
 - **Response Format**: Status 200/201 for success. Errors MUST return `{ error: string }` with 4xx/5xx status.
-- **Supabase Client**: Use the centralized client from `@/lib/supabase`.
+- **Supabase Client**: Use the centralized client from `@/lib/supabase/server` utilizing `@supabase/ssr` for verified server-side session checks.
+- **Payload Validation**: Every mutation API route MUST validate `req.json()` using `Zod` schemas prior to database interactions.
 - **Logic**: Calculations (Volume, RPE) should ideally be done or validated at this layer to ensure consistency.
 
 ### C. Hook & Service Layer (`src/hooks`, `src/lib/api`)
 - **Centralized API**: Use `src/lib/api/client.ts` for all external calls.
-- **Hook Boilerplate**: Every data hook MUST provide `{ data, loading, error, refetch }`.
+- **Data Hook Boilerplate**: Every data hook MUST heavily utilize `useSWR` or `useSWRInfinite` APIs to leverage optimistic updates and global caching instead of manual `useState` and `useEffect` loading sequences.
 - **Types**: Always use types from `src/types/index.ts`. Propagate these types from API responses to hooks.
 
 ### D. UI Layer (`src/components`)

@@ -17,10 +17,16 @@ Create a new directory and `route.ts` in `src/app/api/`.
 - Pattern:
   ```typescript
   import { NextRequest, NextResponse } from 'next/server'
-  import { supabase } from '@/lib/supabase'
+  import { createServerSupabaseClient } from '@/lib/supabase/server'
+  // import { ZodSchema } from '@/lib/schemas'
 
   export async function GET(req: NextRequest) {
-    const { data, error } = await supabase.from('...').select('...')
+    const supabase = createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    // const body = ZodSchema.parse(await req.json()) // for POST/PUT
+    const { data, error } = await supabase.from('...').select('...').eq('user_id', user.id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
   }
@@ -32,14 +38,20 @@ Add the new method to the `api` object in `src/lib/api/client.ts`.
 - Use the `fetcher<T>` helper for automatic error handling.
 
 ## 4. Create/Update Hook
-Create or update a hook in `src/hooks/` (e.g., `useMyResource.ts`) to wrap the API call.
+Create or update a hook in `src/hooks/` (e.g., `useMyResource.ts`) using `useSWR`.
 - Pattern:
   ```typescript
+  import useSWR from 'swr'
+  
+  const fetcher = async (url: string) => {
+    const res = await fetch(url)
+    if (!res.ok) throw new Error('Failed to fetch')
+    return res.json()
+  }
+
   export function useResource() {
-    const [data, setData] = useState<T[]>([])
-    const [loading, setLoading] = useState(true)
-    // ... load function calling api.resource.list()
-    return { data, loading, ... }
+    const { data, error, isLoading, mutate } = useSWR<T[]>('/api/resource', fetcher)
+    return { data: data || [], loading: isLoading, error, refetch: mutate }
   }
   ```
 
