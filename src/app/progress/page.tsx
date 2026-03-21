@@ -16,7 +16,7 @@ export default function ProgressPage() {
   const { exercises } = useExercises()
   const { data, loading, error } = useProgress(exerciseId, range)
   return (
-    <main className="max-w-2xl mx-auto p-4 space-y-6">
+    <main className="max-w-5xl mx-auto p-4 lg:p-8 space-y-6">
       <h1 className="text-2xl font-bold text-foreground">Progress</h1>
       <Card className="flex flex-col md:flex-row gap-5 items-stretch md:items-center p-5">
         <div className="flex-1">
@@ -40,11 +40,13 @@ export default function ProgressPage() {
         </div>
       </Card>
       {loading ? <LoadingSpinner /> : error ? <p className="text-error">{error}</p> : (
-        <>
-          <Card><h2 className="text-sm font-medium text-muted mb-4">Total Volume</h2><VolumeChart data={data} /></Card>
-          <Card><h2 className="text-sm font-medium text-muted mb-4">Strength Trend</h2><StrengthTrendChart data={data} /></Card>
-          <Card><h2 className="text-sm font-medium text-muted mb-4">Muscle Distribution</h2><MuscleDistributionChart data={data} /></Card>
-        </>
+        <div className="lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 space-y-6">
+          <Card className="flex flex-col"><h2 className="text-sm font-medium text-muted mb-4">Total Volume</h2><VolumeChart data={data} /></Card>
+          <div className="space-y-6 flex flex-col">
+            <Card><h2 className="text-sm font-medium text-muted mb-4">Strength Trend</h2><StrengthTrendChart data={data} /></Card>
+            <Card><h2 className="text-sm font-medium text-muted mb-4">Muscle Distribution</h2><MuscleDistributionChart data={data} /></Card>
+          </div>
+        </div>
       )}
     </main>
   )

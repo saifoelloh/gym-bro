@@ -23,7 +23,7 @@ export function WorkoutFooter({
     canSubmit
 }: Props) {
     return (
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom)+4.5rem)] sm:pb-4 bg-gradient-to-t from-bg via-bg/95 to-transparent z-40 md:relative md:bg-transparent md:p-0 md:mt-12">
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-4 bg-gradient-to-t from-bg via-bg/95 to-transparent z-[60] md:relative md:bg-transparent md:p-0 md:mt-12">
             <div className="max-w-2xl mx-auto flex gap-3 pointer-events-auto">
                 {currentStep > 0 && (
                     <button

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { ArrowRight, ChevronDown, ChevronUp, Download } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronUp, Download, Edit } from 'lucide-react'
 import type { Workout } from '@/types'
 import { RPE_DATA } from './RPESlider'
 
@@ -152,6 +152,14 @@ export function WorkoutSummaryDisplay({ workout }: Props) {
                         title="Export to Markdown"
                     >
                         <Download size={20} />
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-surface border border-border text-foreground hover:bg-surface"
+                        onClick={() => router.push(`/workout/${workout.id}/edit`)}
+                        title="Edit Workout"
+                    >
+                        <Edit size={20} />
                     </Button>
                     <Button
                         className="flex-1 h-12 rounded-xl text-micro uppercase italic tracking-widest font-black"

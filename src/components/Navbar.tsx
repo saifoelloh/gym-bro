@@ -19,6 +19,8 @@ export default function Navbar() {
   const { user, nickname, signOut } = useAuth();
   const [mounted, setMounted] = useState(false);
 
+  const isLoggingFullScreen = pathname?.startsWith('/log') || pathname?.includes('/edit');
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -94,27 +96,29 @@ export default function Navbar() {
       </nav>
 
       {/* Bottom Nav (Mobile Only) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur border-t border-border sm:hidden">
-        <div className="grid grid-cols-5 h-16">
-          {links.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href;
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`
-                  flex flex-col items-center justify-center gap-1 transition-colors
-                  ${active ? 'text-accent' : 'text-muted hover:text-foreground'}
-                `}
-              >
-                <Icon size={18} />
-                <span className="font-display text-micro tracking-wider">{label}</span>
-              </Link>
-            );
-          })}
-        </div>
-        <div style={{ height: 'env(safe-area-inset-bottom)' }} />
-      </nav>
+      {!isLoggingFullScreen && (
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur border-t border-border sm:hidden">
+          <div className="grid grid-cols-5 h-16">
+            {links.map(({ href, label, icon: Icon }) => {
+              const active = pathname === href;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`
+                    flex flex-col items-center justify-center gap-1 transition-colors
+                    ${active ? 'text-accent' : 'text-muted hover:text-foreground'}
+                  `}
+                >
+                  <Icon size={18} />
+                  <span className="font-display text-micro tracking-wider">{label}</span>
+                </Link>
+              );
+            })}
+          </div>
+          <div style={{ height: 'env(safe-area-inset-bottom)' }} />
+        </nav>
+      )}
     </>
   );
 }

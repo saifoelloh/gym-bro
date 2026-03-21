@@ -26,7 +26,7 @@ export default function TemplatesPage() {
   if (error) return <p className="text-error p-4">{error}</p>
 
   return (
-    <main className="max-w-2xl mx-auto p-4 space-y-6">
+    <main className="max-w-5xl mx-auto p-4 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Templates</h1>

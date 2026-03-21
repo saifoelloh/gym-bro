@@ -8,15 +8,16 @@ import { WorkoutSetup } from './WorkoutSetup'
 import { WorkoutStep } from './WorkoutStep'
 import { WorkoutFooter } from './WorkoutFooter'
 import { Plus, X, AlertCircle } from 'lucide-react'
-import type { Exercise, ExercisePayload, CreateWorkoutPayload, WorkoutTemplate, TemplateExercise, ActiveWorkoutExercise } from '@/types'
+import type { Exercise, ExercisePayload, CreateWorkoutPayload, WorkoutTemplate, TemplateExercise, ActiveWorkoutExercise, Workout } from '@/types'
 
 interface Props {
   exercises: Exercise[];
   templateId?: string | null;
+  workout?: Workout | null;
   onSubmit: (p: CreateWorkoutPayload) => Promise<void>
 }
 
-export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
+export function WorkoutForm({ exercises, templateId, workout, onSubmit }: Props) {
   const [currentStep, setCurrentStep] = useState(0) // 0: Setup, 1..N: Exercises, N+1: Summary
   const [name, setName] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
@@ -28,7 +29,7 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (templateId) {
+    if (templateId && !workout) {
       api.templates.get(templateId)
         .then((data) => {
           if (data) {
@@ -50,7 +51,34 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
         })
         .catch(console.error);
     }
-  }, [templateId]);
+  }, [templateId, workout]);
+
+  useEffect(() => {
+    if (workout) {
+      setName(workout.name);
+      setDate(workout.date.split('T')[0]);
+      setNotes(workout.notes || '');
+      setRpe(workout.rpe || undefined);
+
+      if (workout.workout_exercises) {
+        const restored = workout.workout_exercises
+          .sort((a,b) => a.exercise_order - b.exercise_order)
+          .map(we => ({
+            exercise: we.exercises as Exercise,
+            notes: we.notes,
+            sets: [...we.sets].sort((a,b) => a.set_number - b.set_number).map(s => ({
+              set_number: s.set_number,
+              reps: s.reps?.toString() || '',
+              weight_kg: s.weight_kg?.toString() || '',
+              duration_seconds: s.duration_seconds?.toString() || '',
+              rest_seconds: s.rest_seconds ?? 90,
+              notes: s.notes || ''
+            }))
+          }));
+        setLogged(restored);
+      }
+    }
+  }, [workout]);
 
   const handleSubmit = async () => {
     if (!name.trim() || !logged.length) return

@@ -27,10 +27,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         // Get initial session
         supabase.auth.getSession().then(({ data: { session } }) => {
-            const token = session?.access_token
-            if (token) {
-                document.cookie = `sb-access-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax;`
-            }
             setSession(session)
             setUser(session?.user ?? null)
             if (session?.user) {
@@ -43,13 +39,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             setSession(session)
             setUser(session?.user ?? null)
-            
-            // Sync to cookie for BFF
-            if (session?.access_token) {
-                document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax;`
-            } else {
-                document.cookie = `sb-access-token=; path=/; max-age=0; SameSite=Lax;`
-            }
 
             if (session?.user) {
                 setNickname(session.user.user_metadata?.nickname || null)
