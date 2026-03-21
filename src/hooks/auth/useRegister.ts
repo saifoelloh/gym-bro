@@ -8,12 +8,12 @@ export function useRegister() {
     const { signUp } = useAuth()
     const router = useRouter()
 
-    const handleSubmit = async (email: string, password: string) => {
+    const handleSubmit = async (email: string, password: string, nickname: string) => {
         setError(null)
         setLoading(true)
 
         try {
-            const { error } = await signUp(email, password, '')
+            const { error } = await signUp(email, password, nickname)
             if (error) throw error
             // Redirect to login with success query param (no alert)
             router.push('/auth/login?registered=true')

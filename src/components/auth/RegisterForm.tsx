@@ -12,6 +12,7 @@ import { PasswordInput } from './PasswordInput'
 import { AuthErrorBanner } from './AuthErrorBanner'
 
 export function RegisterForm() {
+    const [nickname, setNickname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -34,7 +35,12 @@ export function RegisterForm() {
             return
         }
 
-        handleSubmit(email, password)
+        if (!nickname.trim()) {
+            setValidationError('Nickname is required')
+            return
+        }
+
+        handleSubmit(email, password, nickname)
     }
 
     return (
@@ -45,7 +51,18 @@ export function RegisterForm() {
         >
             <AuthErrorBanner error={error || validationError} />
 
-            <form onSubmit={onSubmit} className="space-y-4 relative">
+            <form onSubmit={onSubmit} className="space-y-3 relative">
+                <AuthInput
+                    label="Username"
+                    id="nickname"
+                    type="text"
+                    required
+                    autoComplete="username"
+                    placeholder="e.g. ironwarrior"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                />
+
                 <AuthInput
                     label="Email address"
                     id="email"
@@ -91,7 +108,7 @@ export function RegisterForm() {
                 </div>
             </form>
 
-            <p className="mt-6 text-center text-xs font-display tracking-[0.1em] text-muted">
+            <p className="mt-4 text-center text-xs font-display tracking-[0.1em] text-muted">
                 ALREADY A MEMBER?{' '}
                 <Link href="/auth/login" className="text-accent hover:border-b border-accent/30 pb-0.5 transition-all ml-1">
                     LOG IN
