@@ -5,9 +5,17 @@ import type { Workout, CreateWorkoutPayload } from '@/types'
 import { useAuth } from '@/components/providers/AuthContext'
 
 const fetcher = async (url: string) => {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error('Failed to fetch workouts')
-  return res.json()
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 8000)
+  try {
+    const res = await fetch(url, { signal: controller.signal })
+    clearTimeout(timeoutId)
+    if (!res.ok) throw new Error('Failed to fetch workouts')
+    return await res.json()
+  } catch (err: any) {
+    if (err.name === 'AbortError') throw new Error('Request timed out (dev server cold start)')
+    throw err
+  }
 }
 
 export function useWorkouts(limit = 20) {
@@ -27,10 +35,10 @@ export function useWorkouts(limit = 20) {
     return `/api/workouts?limit=${limit}&offset=${pageIndex * limit}&search=${encodeURIComponent(debouncedSearch)}`
   }
 
-  const { data, error, size, setSize, mutate } = useSWRInfinite<Workout[]>(getKey, fetcher)
+  const { data, error, size, setSize, mutate, isLoading } = useSWRInfinite<Workout[]>(getKey, fetcher)
 
   const workouts = data ? data.flat() : []
-  const loading = authLoading || (user && !data && !error)
+  const loading = authLoading || isLoading
   const loadingMore = size > 0 && data && typeof data[size - 1] === 'undefined'
   const hasMore = data?.[data.length - 1]?.length === limit 
 
