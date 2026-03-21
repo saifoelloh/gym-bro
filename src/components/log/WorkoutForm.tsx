@@ -8,9 +8,8 @@ import { WorkoutSetup } from './WorkoutSetup'
 import { WorkoutStep } from './WorkoutStep'
 import { WorkoutFooter } from './WorkoutFooter'
 import { Plus, X, AlertCircle } from 'lucide-react'
-import type { Exercise, ExercisePayload, CreateWorkoutPayload, WorkoutTemplate, TemplateExercise } from '@/types'
+import type { Exercise, ExercisePayload, CreateWorkoutPayload, WorkoutTemplate, TemplateExercise, ActiveWorkoutExercise } from '@/types'
 
-interface LoggedExercise { exercise: Exercise; sets: any[]; notes?: string }
 interface Props {
   exercises: Exercise[];
   templateId?: string | null;
@@ -23,7 +22,7 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [notes, setNotes] = useState('')
   const [rpe, setRpe] = useState<number | undefined>()
-  const [logged, setLogged] = useState<LoggedExercise[]>([])
+  const [logged, setLogged] = useState<ActiveWorkoutExercise[]>([])
   const [picking, setPicking] = useState(false)
   const [saving, setSaving] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -66,11 +65,12 @@ export function WorkoutForm({ exercises, templateId, onSubmit }: Props) {
               (s.duration_seconds !== undefined && s.duration_seconds !== '')
             )
             .map((s, si) => ({
-              ...s,
               set_number: si + 1,
-              weight_kg: s.weight_kg === '' ? undefined : s.weight_kg,
-              reps: s.reps === '' ? undefined : s.reps,
-              duration_seconds: s.duration_seconds === '' ? undefined : s.duration_seconds
+              weight_kg: (s.weight_kg === '' || s.weight_kg === undefined) ? undefined : Number(s.weight_kg),
+              reps: (s.reps === '' || s.reps === undefined) ? undefined : Number(s.reps),
+              duration_seconds: (s.duration_seconds === '' || s.duration_seconds === undefined) ? undefined : Number(s.duration_seconds),
+              rest_seconds: Number(s.rest_seconds),
+              notes: s.notes || ''
             }));
 
           return {

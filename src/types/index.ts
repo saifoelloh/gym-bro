@@ -144,3 +144,9 @@ export interface ActiveExercise {
   sets: ActiveSet[]
   notes: string
 }
+
+export interface ActiveWorkoutExercise {
+  exercise: Exercise
+  sets: ActiveSet[]
+  notes?: string
+}

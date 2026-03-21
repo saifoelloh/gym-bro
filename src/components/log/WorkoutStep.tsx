@@ -2,14 +2,12 @@ import { PlusCircle } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { SetLogger } from './SetLogger'
-import type { Exercise } from '@/types'
-
-interface LoggedExercise { exercise: Exercise; sets: any[]; notes?: string }
+import type { Exercise, ActiveWorkoutExercise, ActiveSet } from '@/types'
 
 interface Props {
-    loggedExercise: LoggedExercise
+    loggedExercise: ActiveWorkoutExercise
     index: number
-    onSetsChange: (sets: any[]) => void
+    onSetsChange: (sets: ActiveSet[]) => void
     onAddExercise: () => void
 }
 

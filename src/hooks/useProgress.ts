@@ -3,7 +3,7 @@ import { api } from '@/lib/api/client'
 import type { ProgressPoint } from '@/types'
 import { useAuth } from '@/components/providers/AuthContext'
 
-export function useProgress(params?: { exerciseId?: string; range?: number }) {
+export function useProgress(exerciseId?: string, range?: number) {
   const { user, loading: authLoading } = useAuth()
   const [data, setData]       = useState<ProgressPoint[]>([])
   const [loading, setLoading] = useState(true)
@@ -18,12 +18,11 @@ export function useProgress(params?: { exerciseId?: string; range?: number }) {
     }
 
     setLoading(true)
-    api.progress.get(params)
+    api.progress.get({ exerciseId, range })
       .then(setData)
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params?.exerciseId, params?.range, user, authLoading])
+  }, [exerciseId, range, user, authLoading])
 
   return { data, loading: loading || authLoading, error }
 }

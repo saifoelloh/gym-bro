@@ -14,7 +14,7 @@ export default function ProgressPage() {
   const [exerciseId, setExerciseId] = useState<string | undefined>()
   const [range, setRange] = useState(30)
   const { exercises } = useExercises()
-  const { data, loading, error } = useProgress({ exerciseId, range })
+  const { data, loading, error } = useProgress(exerciseId, range)
   return (
     <main className="max-w-2xl mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-bold text-foreground">Progress</h1>

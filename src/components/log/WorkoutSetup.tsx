@@ -4,17 +4,15 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { FormLabel } from '@/components/ui/FormLabel'
 import { Badge } from '@/components/ui/Badge'
-import type { Exercise } from '@/types'
-
-interface LoggedExercise { exercise: Exercise; sets: any[] }
+import type { Exercise, ActiveWorkoutExercise } from '@/types'
 
 interface Props {
     name: string
     setName: (v: string) => void
     date: string
     setDate: (v: string) => void
-    logged: LoggedExercise[]
-    setLogged: (v: LoggedExercise[] | ((p: LoggedExercise[]) => LoggedExercise[])) => void
+    logged: ActiveWorkoutExercise[]
+    setLogged: (v: ActiveWorkoutExercise[] | ((p: ActiveWorkoutExercise[]) => ActiveWorkoutExercise[])) => void
     onAddExercise: () => void
 }
 
