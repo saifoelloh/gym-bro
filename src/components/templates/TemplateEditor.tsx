@@ -104,11 +104,11 @@ export default function TemplateEditor({ template, onSaved, onCancel }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex flex-col sm:items-center sm:justify-center animate-in fade-in duration-300">
-      <div className="bg-bg border-t sm:border border-border sm:rounded-2xl w-full max-w-2xl h-full sm:h-auto sm:max-h-[85vh] flex flex-col shadow-2xl overflow-hidden relative transition-all">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex flex-col sm:items-center sm:justify-center overflow-hidden animate-in fade-in duration-300">
+      <div className="bg-bg border-t sm:border border-border sm:rounded-2xl w-full max-w-2xl h-[100dvh] sm:h-[85vh] flex flex-col shadow-2xl relative transition-all">
 
-        {/* Sticky Header */}
-        <div className="sticky top-0 z-20 flex items-center justify-between p-4 sm:p-5 border-b border-border glass-panel">
+        {/* Header */}
+        <div className="shrink-0 z-20 flex items-center justify-between p-4 sm:p-5 border-b border-border bg-bg/80 backdrop-blur-md">
           <div>
             <h2 className="text-base sm:text-lg font-bold text-foreground tracking-tight uppercase text-premium">
               {template ? 'Edit Template' : 'New Template'}
@@ -126,7 +126,7 @@ export default function TemplateEditor({ template, onSaved, onCancel }: Props) {
         </div>
 
         {/* Form Body */}
-        <div className="overflow-y-auto flex-1 p-4 sm:p-6 space-y-8 scrollbar-hide pb-32 sm:pb-6">
+        <div className="overflow-y-auto flex-1 min-h-0 p-4 sm:p-6 space-y-8 pb-8 overscroll-contain">
 
           {/* Metadata Section */}
           <div className="space-y-4">
@@ -269,8 +269,8 @@ export default function TemplateEditor({ template, onSaved, onCancel }: Props) {
           )}
         </div>
 
-        {/* Sticky Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 border-t border-border bg-bg/90 backdrop-blur-xl flex flex-col sm:flex-row gap-3">
+        {/* Footer */}
+        <div className="shrink-0 p-4 sm:p-5 border-t border-border bg-bg/90 backdrop-blur-xl flex flex-col sm:flex-row gap-3">
           <button
             onClick={onCancel}
             className="flex-1 py-3.5 sm:py-3 text-xs font-bold text-muted tracking-widest hover:text-foreground hover:bg-surface rounded-xl transition-all uppercase"

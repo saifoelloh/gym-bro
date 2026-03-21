@@ -141,7 +141,7 @@ export function WorkoutForm({ exercises, templateId, workout, onSubmit }: Props)
     <div className="flex flex-col min-h-screen pb-40">
       <Stepper currentStep={currentStep} totalSteps={totalSteps} />
 
-      <div className="flex-1 space-y-6 pt-2 px-2">
+      <div className="flex-1 space-y-6 pt-2">
         {currentStep === 0 && (
           <WorkoutSetup
             name={name} setName={setName}
